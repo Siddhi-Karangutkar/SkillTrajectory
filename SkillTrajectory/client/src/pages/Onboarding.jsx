@@ -30,9 +30,94 @@ const Onboarding = () => {
     const [suggestions, setSuggestions] = useState({ type: '', list: [] });
     const [showSuggestions, setShowSuggestions] = useState({ section: '', index: null, field: '' });
 
-    const DEGREES = ['High School', 'Associate Degree', 'Bachelor of Science (BSc)', 'Bachelor of Arts (BA)', 'Master of Science (MSc)', 'Master of Arts (MA)', 'MBA', 'PhD', 'Doctorate', 'Diploma', 'Certification'];
-    const FIELDS_OF_STUDY = ['Computer Science', 'Data Science', 'Information Technology', 'Software Engineering', 'Mathematics', 'Physics', 'Business Administration', 'Marketing', 'Finance', 'Economics', 'Psychology', 'Graphic Design', 'Mechanical Engineering', 'Electrical Engineering', 'Biology', 'Chemistry'];
-    const POSITIONS = ['Software Engineer', 'Full Stack Developer', 'Frontend Developer', 'Backend Developer', 'Data Scientist', 'Product Manager', 'UX Designer', 'UI Designer', 'Project Manager', 'Marketing Manager', 'Sales Representative', 'Customer Success Manager', 'Data Analyst', 'DevOps Engineer', 'Cloud Architect', 'Cybersecurity Specialist'];
+    const DEGREES = [
+        'High School Diploma', 'Associate Degree', 'Bachelor of Science (BSc)', 'Bachelor of Arts (BA)',
+        'Bachelor of Engineering (BEng)', 'Master of Science (MSc)', 'Master of Arts (MA)',
+        'Master of Engineering (MEng)', 'MBA', 'PhD', 'Doctorate', 'Diploma', 'Certification',
+        'Post Graduate Diploma', 'Executive MBA', 'M.Tech', 'B.Tech'
+    ];
+    const FIELDS_OF_STUDY = [
+        'Computer Science', 'Data Science', 'Information Technology', 'Software Engineering',
+        'Artificial Intelligence', 'Cybersecurity', 'Mathematics', 'Physics', 'Chemistry',
+        'Mechanical Engineering', 'Electrical Engineering', 'Civil Engineering', 'Chemical Engineering',
+        'Business Administration', 'Marketing', 'Finance', 'Economics', 'Management',
+        'Psychology', 'Sociology', 'Graphic Design', 'Digital Arts', 'Architecture', 'Law',
+        'Medicine', 'Pharmacy', 'Biotechnology', 'Journalism', 'Public Relations'
+    ];
+    const POSITIONS = [
+        'Software Engineer', 'Full Stack Developer', 'Frontend Developer', 'Backend Developer',
+        'Mobile Developer (iOS/Android)', 'Data Scientist', 'Data Analyst', 'Data Engineer',
+        'Machine Learning Engineer', 'DevOps Engineer', 'Cloud Architect', 'Cybersecurity Specialist',
+        'Product Manager', 'Project Manager', 'Program Manager', 'Technical Product Manager',
+        'UX Designer', 'UI Designer', 'Product Designer', 'Graphic Designer',
+        'Marketing Manager', 'Digital Marketer', 'Content Strategist', 'SEO Specialist',
+        'Sales Representative', 'Account Manager', 'Business Development Manager',
+        'Customer Success Manager', 'HR Manager', 'Talent Acquisition Specialist',
+        'Operations Manager', 'Financial Analyst', 'Investment Banker', 'Legal Counsel'
+    ];
+
+    const ROLE_SKILLS = {
+        'Software Engineer': {
+            macro: ['Java', 'Python', 'C++', 'System Architecture', 'Git', 'Docker', 'Agile'],
+            micro: ['Problem Solving', 'Analytical Thinking', 'Team Collaboration', 'Continuous Learning']
+        },
+        'Full Stack Developer': {
+            macro: ['React', 'Node.js', 'TypeScript', 'MongoDB', 'AWS', 'REST APIs', 'System Design'],
+            micro: ['Time Management', 'Communication', 'Attention to Detail', 'Adaptability']
+        },
+        'Frontend Developer': {
+            macro: ['JavaScript', 'HTML5/CSS3', 'React', 'Vue.js', 'Next.js', 'Tailwind CSS', 'Redux'],
+            micro: ['User Empathy', 'Creative Thinking', 'Collaboration', 'Visual Communication']
+        },
+        'Backend Developer': {
+            macro: ['Go', 'Rust', 'Ruby on Rails', 'SQL', 'Redis', 'Microservices', 'OAuth'],
+            micro: ['Security Awareness', 'Critical Thinking', 'Patience', 'Documentation']
+        },
+        'Data Scientist': {
+            macro: ['Python', 'R', 'TensorFlow', 'PyTorch', 'Pandas', 'Scikit-learn', 'Statistics'],
+            micro: ['Data Storytelling', 'Curiosity', 'Business Intuition', 'Ethics']
+        },
+        'Data Analyst': {
+            macro: ['SQL', 'Tableau', 'Power BI', 'Excel', 'Python', 'Statistics', 'Data Cleaning'],
+            micro: ['Attention to Detail', 'Communication', 'Logical Reasoning', 'Objectivity']
+        },
+        'DevOps Engineer': {
+            macro: ['Docker', 'Kubernetes', 'Terraform', 'Jenkins', 'AWS/Azure', 'CI/CD', 'Linux'],
+            micro: ['Reliability', 'Calmness under Pressure', 'Systemic Thinking', 'Collaboration']
+        },
+        'Cloud Architect': {
+            macro: ['Cloud Strategy', 'AWS', 'Azure', 'GCP', 'Network Security', 'Cost Optimization'],
+            micro: ['Decision Making', 'Strategic Planning', 'Visionary Thinking', 'Leadership']
+        },
+        'Cybersecurity Specialist': {
+            macro: ['Pentesting', 'Network Security', 'Encryption', 'Incident Response', 'Firewalls'],
+            micro: ['Integrity', 'Vigilance', 'Discretion', 'Problem Solving']
+        },
+        'Product Manager': {
+            macro: ['Roadmap Planning', 'User Research', 'A/B Testing', 'Market Analysis', 'Figma'],
+            micro: ['Leadership', 'Negotiation', 'Strategic Thinking', 'Public Speaking']
+        },
+        'UX Designer': {
+            macro: ['Figma', 'Adobe XD', 'Prototyping', 'User Interviews', 'Wireframing', 'Accessibility'],
+            micro: ['Empathetic Design', 'User Advocacy', 'Storytelling', 'Feedback Receptivity']
+        },
+        'UI Designer': {
+            macro: ['Visual Design', 'Design Systems', 'Typography', 'Iconography', 'Adobe Illustrator'],
+            micro: ['Aesthetics', 'Trend Awareness', 'Communication', 'Precision']
+        },
+        'Marketing Manager': {
+            macro: ['SEO', 'Content Strategy', 'Google Analytics', 'Social Media Ads', 'Brand Identity'],
+            micro: ['Creativity', 'Persuasion', 'Networking', 'Emotional Intelligence']
+        },
+        'Financial Analyst': {
+            macro: ['Financial Modeling', 'Valuation', 'Budgeting', 'Risk Assessment', 'Excel/VBA'],
+            micro: ['Precision', 'Confidentiality', 'Global Outlook', 'Stress Tolerance']
+        },
+        'HR Manager': {
+            macro: ['Recruitment', 'Employee Relations', 'HRIS', 'Labor Law', 'Performance Management'],
+            micro: ['Conflict Resolution', 'Confidentiality', 'Active Listening', 'Organization']
+        }
+    };
 
     const fetchLocations = async (query) => {
         if (!query || query.length < 3) return;
@@ -364,76 +449,114 @@ const Onboarding = () => {
         }
     };
 
-    const renderStep4 = () => (
-        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '1rem' }}>
-                <h3 style={{ margin: 0 }}>Step 4: Micro-skills Selection</h3>
-                <span className="tooltip-icon" title="Micro-skills are granular capabilities like 'Data Visualization' rather than just 'Python'" style={{ cursor: 'help', color: '#FF6E14', fontSize: '1.2rem' }}>ⓘ</span>
-            </div>
-            <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '2rem' }}>Identify the building blocks of your talent DNA.</p>
+    const getSuggestedSkills = () => {
+        const role = formData.currentRole || (formData.experience[0]?.position) || 'Software Engineer';
+        const match = Object.keys(ROLE_SKILLS).find(r =>
+            role.toLowerCase().includes(r.toLowerCase()) ||
+            r.toLowerCase().includes(role.toLowerCase())
+        ) || 'Software Engineer';
+        return ROLE_SKILLS[match];
+    };
 
-            <form onSubmit={handleAddSkill} style={{ display: 'flex', gap: '10px' }}>
-                <input
-                    type="text"
-                    value={newSkill}
-                    onChange={(e) => setNewSkill(e.target.value)}
-                    placeholder="Enter a skill (e.g. Rapid Prototyping)"
-                />
-                <button type="submit" className="auth-button" style={{ marginTop: 0, width: '120px' }}>Add</button>
-            </form>
+    const renderStep4 = () => {
+        const suggested = getSuggestedSkills();
 
-            <div className="suggestions" style={{ marginTop: '1.5rem' }}>
-                <label style={{ fontSize: '0.85rem', color: '#888', display: 'block', marginBottom: '0.8rem' }}>Suggested for you:</label>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                    {SUGGESTED_SKILLS.map((skill, index) => (
-                        <button
+        return (
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '1rem' }}>
+                    <h3 style={{ margin: 0 }}>Step 4: Skill Mastery</h3>
+                    <span className="tooltip-icon" title="Macro skills represent your technical and domain expertise, while Micro skills focus on soft skills and interpersonal capabilities." style={{ cursor: 'help', color: '#FF6E14', fontSize: '1.2rem' }}>ⓘ</span>
+                </div>
+                <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '2rem' }}>Let's categorize your expertise for better trajectory modeling.</p>
+
+                <form onSubmit={handleAddSkill} style={{ display: 'flex', gap: '10px', marginBottom: '2rem' }}>
+                    <input
+                        type="text"
+                        value={newSkill}
+                        onChange={(e) => setNewSkill(e.target.value)}
+                        placeholder="Add a custom skill (e.g. System Design)"
+                    />
+                    <button type="submit" className="auth-button" style={{ marginTop: 0, width: '120px' }}>Add</button>
+                </form>
+
+                <div className="skills-section" style={{ marginBottom: '2rem' }}>
+                    <label style={{ fontSize: '0.9rem', fontWeight: '600', color: '#1A1A1A', display: 'block', marginBottom: '1rem' }}>Macro Skills (Technical & Domain)</label>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                        {suggested.macro.map((skill, index) => (
+                            <button
+                                key={`macro-${index}`}
+                                onClick={() => toggleSuggestedSkill(skill)}
+                                style={{
+                                    padding: '8px 16px',
+                                    borderRadius: '20px',
+                                    fontSize: '0.85rem',
+                                    border: '1px solid',
+                                    borderColor: formData.skills.includes(skill) ? '#FF6E14' : '#E0E0E0',
+                                    background: formData.skills.includes(skill) ? 'rgba(255, 110, 20, 0.1)' : '#FFF',
+                                    color: formData.skills.includes(skill) ? '#FF6E14' : '#666',
+                                    transition: 'all 0.2s ease',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                {formData.skills.includes(skill) ? '✓ ' : '+ '}{skill}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="skills-section" style={{ marginBottom: '2rem' }}>
+                    <label style={{ fontSize: '0.9rem', fontWeight: '600', color: '#1A1A1A', display: 'block', marginBottom: '1rem' }}>Micro Skills (Soft & Interpersonal)</label>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                        {suggested.micro.map((skill, index) => (
+                            <button
+                                key={`micro-${index}`}
+                                onClick={() => toggleSuggestedSkill(skill)}
+                                style={{
+                                    padding: '8px 16px',
+                                    borderRadius: '20px',
+                                    fontSize: '0.85rem',
+                                    border: '1px solid',
+                                    borderColor: formData.skills.includes(skill) ? '#FF6E14' : '#E0E0E0',
+                                    background: formData.skills.includes(skill) ? 'rgba(255, 110, 20, 0.1)' : '#FFF',
+                                    color: formData.skills.includes(skill) ? '#FF6E14' : '#666',
+                                    transition: 'all 0.2s ease',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                {formData.skills.includes(skill) ? '✓ ' : '+ '}{skill}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '1rem', minHeight: '80px', padding: '1.5rem', border: '2px dashed #F0F0F0', borderRadius: '16px' }}>
+                    {formData.skills.length > 0 ? formData.skills.map((skill, index) => (
+                        <motion.div
                             key={index}
-                            onClick={() => toggleSuggestedSkill(skill)}
+                            initial={{ scale: 0.8 }}
+                            animate={{ scale: 1 }}
+                            className="skill-chip"
                             style={{
-                                padding: '6px 14px',
-                                borderRadius: '20px',
-                                fontSize: '0.85rem',
-                                border: '1px solid',
-                                borderColor: formData.skills.includes(skill) ? '#FF6E14' : '#E0E0E0',
-                                background: formData.skills.includes(skill) ? 'rgba(255, 110, 20, 0.1)' : '#FFF',
-                                color: formData.skills.includes(skill) ? '#FF6E14' : '#666',
-                                transition: 'all 0.2s ease',
-                                cursor: 'pointer'
+                                background: '#FF6E14',
+                                color: '#FFF',
+                                padding: '8px 16px',
+                                borderRadius: '25px',
+                                fontSize: '0.9rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px'
                             }}
                         >
-                            {formData.skills.includes(skill) ? '✓ ' : '+ '}{skill}
-                        </button>
-                    ))}
+                            {skill}
+                            <span onClick={() => removeSkill(skill)} style={{ cursor: 'pointer', fontWeight: 'bold' }}>×</span>
+                        </motion.div>
+                    )) : (
+                        <div style={{ color: '#CCC', width: '100%', textAlign: 'center', alignSelf: 'center' }}>Selected skills will appear here</div>
+                    )}
                 </div>
-            </div>
-
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '2.5rem', minHeight: '100px', padding: '1.5rem', border: '2px dashed #F0F0F0', borderRadius: '16px' }}>
-                {formData.skills.length > 0 ? formData.skills.map((skill, index) => (
-                    <motion.div
-                        key={index}
-                        initial={{ scale: 0.8 }}
-                        animate={{ scale: 1 }}
-                        className="skill-chip"
-                        style={{
-                            background: '#FF6E14',
-                            color: '#FFF',
-                            padding: '8px 16px',
-                            borderRadius: '25px',
-                            fontSize: '0.9rem',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px'
-                        }}
-                    >
-                        {skill}
-                        <span onClick={() => removeSkill(skill)} style={{ cursor: 'pointer', fontWeight: 'bold' }}>×</span>
-                    </motion.div>
-                )) : (
-                    <div style={{ color: '#CCC', width: '100%', textAlign: 'center', alignSelf: 'center' }}>Your selected skills will appear here</div>
-                )}
-            </div>
-        </motion.div>
-    );
+            </motion.div>
+        );
+    };
 
     const renderStep5 = () => (
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
