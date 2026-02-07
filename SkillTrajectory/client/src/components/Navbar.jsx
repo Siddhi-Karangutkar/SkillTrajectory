@@ -7,13 +7,6 @@ import './Navbar.css';
 const NAV_ITEMS = [
   { label: 'Home', path: '/' },
   {
-    label: 'Overview',
-    dropdown: [
-      { label: 'Problem Statement', path: '/problem' },
-      { label: 'Our Solution', path: '/solution' }
-    ]
-  },
-  {
     label: 'Profile',
     dropdown: [
       { label: 'Create Profile', path: '/profile/create' },
@@ -45,7 +38,8 @@ const NAV_ITEMS = [
       { label: 'Skill Decay', path: '/dashboard/decay' },
       { label: 'Fairness Metrics', path: '/dashboard/fairness' }
     ]
-  }
+  },
+  { label: 'Community Hub', path: '/community' }
 ];
 
 const Navbar = () => {

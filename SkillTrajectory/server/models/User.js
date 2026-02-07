@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema({
         phone: { type: String, default: '' },
         bio: { type: String, default: '' },
         currentRole: { type: String, default: '' },
+        linkedIn: { type: String, default: '' },
         location: { type: String, default: '' },
         yearsOfExperience: { type: Number, default: 0 },
 
@@ -63,6 +64,9 @@ const userSchema = new mongoose.Schema({
             availableTime: { type: String, default: '' }, // e.g., "Full-time", "10 hrs/week"
             incomeNeeds: { type: String, default: '' }
         },
+        streak: { type: Number, default: 0 },
+        points: { type: Number, default: 0 },
+        lastActive: { type: Date, default: Date.now },
         isOnboardingComplete: { type: Boolean, default: false },
         savedTimeline: {
             roleId: String,

@@ -35,6 +35,7 @@ import LearningDuration from './pages/LearningDuration';
 import SkillDemandTrends from './pages/SkillDemandTrends';
 import SkillDecay from './pages/SkillDecay';
 import FairnessMetrics from './pages/FairnessMetrics';
+import Community from './pages/Community';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -94,6 +95,7 @@ function App() {
             <Route path="/dashboard/trends" element={<ProtectedRoute><SkillDemandTrends /></ProtectedRoute>} />
             <Route path="/dashboard/decay" element={<ProtectedRoute><SkillDecay /></ProtectedRoute>} />
             <Route path="/dashboard/fairness" element={<ProtectedRoute><FairnessMetrics /></ProtectedRoute>} />
+            <Route path="/community" element={<ProtectedRoute><Community /></ProtectedRoute>} />
           </Routes>
           <Footer />
         </Router>
