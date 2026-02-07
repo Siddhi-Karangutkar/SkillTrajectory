@@ -10,11 +10,34 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setLoading(false);
+    const checkAuth = async () => {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+
+        // Fetch freshest profile data from backend
+        try {
+          const config = {
+            headers: {
+              Authorization: `Bearer ${parsedUser.token}`
+            }
+          };
+          const response = await axios.get(`${API_URL}/users/profile`, config);
+          const updatedUser = { ...parsedUser, profile: response.data.profile };
+          setUser(updatedUser);
+          localStorage.setItem('user', JSON.stringify(updatedUser));
+        } catch (error) {
+          console.error('Failed to sync profile:', error);
+          if (error.response?.status === 401) {
+            logout();
+          }
+        }
+      }
+      setLoading(false);
+    };
+
+    checkAuth();
   }, []);
 
   const login = async (email, password) => {

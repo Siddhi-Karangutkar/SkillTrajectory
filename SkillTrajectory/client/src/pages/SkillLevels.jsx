@@ -10,6 +10,7 @@ const SkillLevels = () => {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
+    const [isInitialized, setIsInitialized] = useState(false);
     const navigate = useNavigate();
 
     const GUIDE = [
@@ -21,15 +22,16 @@ const SkillLevels = () => {
     ];
 
     useEffect(() => {
-        if (user?.profile?.skills) {
+        if (user?.profile?.skills && !isInitialized) {
             const normalizedSkills = user.profile.skills.map(skill => ({
                 ...skill,
                 score: skill.score || 0,
                 level: getLevelFromScore(skill.score || 0)
             }));
             setSkillList(normalizedSkills);
+            setIsInitialized(true);
         }
-    }, [user]);
+    }, [user, isInitialized]);
 
     const getLevelFromScore = (score) => {
         if (score >= 90) return 'Expert';

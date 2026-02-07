@@ -12,6 +12,7 @@ const EditSkills = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
+    const [isInitialized, setIsInitialized] = useState(false);
     const navigate = useNavigate();
 
     const CATEGORIES = [
@@ -29,10 +30,11 @@ const EditSkills = () => {
     };
 
     useEffect(() => {
-        if (user?.profile?.skills) {
+        if (user?.profile?.skills && !isInitialized) {
             setSkillList(user.profile.skills);
+            setIsInitialized(true);
         }
-    }, [user]);
+    }, [user, isInitialized]);
 
     const handleAddSkill = (skillName, category = activeCategory) => {
         const name = skillName.trim();

@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema({
         bio: { type: String, default: '' },
         currentRole: { type: String, default: '' },
         location: { type: String, default: '' },
+        yearsOfExperience: { type: Number, default: 0 },
 
         education: [{
             school: String,

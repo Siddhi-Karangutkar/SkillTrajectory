@@ -13,18 +13,40 @@ const Onboarding = () => {
 
     // State for each step
     const [formData, setFormData] = useState({
-        fullName: user?.profile?.fullName || '',
-        phone: user?.profile?.phone || '',
-        bio: user?.profile?.bio || '',
-        currentRole: user?.profile?.currentRole || '',
-        location: user?.profile?.location || '',
-        education: user?.profile?.education || [{ school: '', degree: '', fieldOfStudy: '', startYear: '', endYear: '' }],
-        experience: user?.profile?.experience || [{ company: '', position: '', location: '', startDate: '', endDate: '', description: '' }],
-        projects: user?.profile?.projects || [{ title: '', description: '', link: '' }],
-        skills: user?.profile?.skills || [],
-        interests: user?.profile?.interests || [],
-        constraints: user?.profile?.constraints || { preferredLocation: '', availableTime: '', incomeNeeds: '' }
+        fullName: '',
+        phone: '',
+        bio: '',
+        currentRole: '',
+        location: '',
+        education: [{ school: '', degree: '', fieldOfStudy: '', startYear: '', endYear: '' }],
+        experience: [{ company: '', position: '', location: '', startDate: '', endDate: '', description: '' }],
+        projects: [{ title: '', description: '', link: '' }],
+        skills: [],
+        interests: [],
+        constraints: { preferredLocation: '', availableTime: '', incomeNeeds: '' }
     });
+
+    // Prefill form directly from user profile when it's available
+    const [isInitialized, setIsInitialized] = useState(false);
+
+    React.useEffect(() => {
+        if (user?.profile && !isInitialized) {
+            setFormData({
+                fullName: user.profile.fullName || '',
+                phone: user.profile.phone || '',
+                bio: user.profile.bio || '',
+                currentRole: user.profile.currentRole || '',
+                location: user.profile.location || '',
+                education: user.profile.education?.length > 0 ? user.profile.education : [{ school: '', degree: '', fieldOfStudy: '', startYear: '', endYear: '' }],
+                experience: user.profile.experience?.length > 0 ? user.profile.experience : [{ company: '', position: '', location: '', startDate: '', endDate: '', description: '' }],
+                projects: user.profile.projects?.length > 0 ? user.profile.projects : [{ title: '', description: '', link: '' }],
+                skills: user.profile.skills || [],
+                interests: user.profile.interests || [],
+                constraints: user.profile.constraints || { preferredLocation: '', availableTime: '', incomeNeeds: '' }
+            });
+            setIsInitialized(true);
+        }
+    }, [user, isInitialized]);
 
     const [newSkill, setNewSkill] = useState('');
     const [suggestions, setSuggestions] = useState({ type: '', list: [] });
