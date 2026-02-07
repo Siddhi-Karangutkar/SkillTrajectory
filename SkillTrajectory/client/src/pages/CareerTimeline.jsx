@@ -37,7 +37,7 @@ const CareerTimeline = () => {
     const fetchAITimeline = async (role) => {
         try {
             setLoading(true);
-            const token = localStorage.getItem('token');
+            const token = user?.token;
             const response = await fetch('http://localhost:5000/api/users/career-insights', {
                 method: 'POST',
                 headers: {
@@ -76,7 +76,7 @@ const CareerTimeline = () => {
     const handleSaveTimeline = async () => {
         try {
             setIsSaving(true);
-            const token = localStorage.getItem('token');
+            const token = user?.token;
             const response = await fetch('http://localhost:5000/api/users/profile', {
                 method: 'PUT',
                 headers: {

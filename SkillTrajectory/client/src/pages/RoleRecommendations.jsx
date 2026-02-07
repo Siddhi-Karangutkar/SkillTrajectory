@@ -19,7 +19,7 @@ const RoleRecommendations = () => {
     const fetchAIRecommendations = async () => {
         try {
             setLoading(true);
-            const token = localStorage.getItem('token');
+            const token = user?.token;
             const response = await fetch('http://localhost:5000/api/users/role-recommendations', {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -91,7 +91,7 @@ const RoleRecommendations = () => {
                                         minWidth: '70px',
                                         boxShadow: `0 10px 20px ${getScoreColor(role.fitScore)}25`
                                     }}>
-                                        <div style={{ fontSize: '1.5rem', fontWeight: '900', letterSpacing: '-1px' }}>{role.fitScore}%</div>
+                                        <div style={{ fontSize: '1.5rem', fontWeight: '900', letterSpacing: '-1px' }}>{Math.round(role.fitScore)}%</div>
                                         <div style={{ fontSize: '0.7rem', fontWeight: '700', textTransform: 'uppercase' }}>Fit</div>
                                     </div>
                                 </div>

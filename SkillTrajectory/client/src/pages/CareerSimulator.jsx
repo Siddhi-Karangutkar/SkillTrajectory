@@ -13,13 +13,19 @@ const CareerSimulator = () => {
     const navigate = useNavigate();
 
     // Simulation Parameters
-    const [targetRole, setTargetRole] = useState('Technical Lead');
+    const [targetRole, setTargetRole] = useState(user?.profile?.savedTimeline?.roleTitle || 'Technical Lead');
     const [learningHours, setLearningHours] = useState(27);
     const [timeHorizon, setTimeHorizon] = useState(5);
 
     // AI Data State
     const [simData, setSimData] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (user?.profile?.savedTimeline?.roleTitle && targetRole === 'Technical Lead') {
+            setTargetRole(user.profile.savedTimeline.roleTitle);
+        }
+    }, [user]);
 
     useEffect(() => {
         if (user) {
@@ -30,7 +36,7 @@ const CareerSimulator = () => {
     const fetchAISimulation = async () => {
         try {
             setLoading(true);
-            const token = localStorage.getItem('token');
+            const token = user?.token;
             const response = await fetch('http://localhost:5000/api/users/career-simulation', {
                 method: 'POST',
                 headers: {
@@ -80,7 +86,10 @@ const CareerSimulator = () => {
                         <div style={{ marginBottom: '2.5rem' }}>
                             <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '800', color: '#828282', marginBottom: '15px' }}>Target Path</label>
                             <div style={{ display: 'flex', gap: '10px', background: '#F8F9FB', padding: '6px', borderRadius: '16px' }}>
-                                {['Technical Lead', 'Engineering Manager'].map(role => (
+                                {((user?.profile?.savedTimeline?.roleTitle)
+                                    ? [user.profile.savedTimeline.roleTitle]
+                                    : ['Technical Lead', 'Engineering Manager']
+                                ).map(role => (
                                     <button
                                         key={role}
                                         onClick={() => setTargetRole(role)}
@@ -152,7 +161,7 @@ const CareerSimulator = () => {
                                 <h3 style={{ fontSize: '1rem', fontWeight: '900', color: '#1A1A1A', marginBottom: '20px' }}>Projected Impact</h3>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
                                     <span style={{ color: '#828282', fontWeight: '600' }}>Salary Upside</span>
-                                    <span style={{ color: '#10B981', fontWeight: '900' }}>+{simData.projectedSalaryUpside || simData.salaryUpside}%</span>
+                                    <span style={{ color: '#10B981', fontWeight: '900' }}>+{Math.round(simData.projectedSalaryUpside || simData.salaryUpside)}%</span>
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <span style={{ color: '#828282', fontWeight: '600' }}>Burnout Risk</span>

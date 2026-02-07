@@ -21,7 +21,7 @@ const SectorTransitions = () => {
     const fetchAITransitions = async () => {
         try {
             setLoading(true);
-            const token = localStorage.getItem('token');
+            const token = user?.token;
             const response = await fetch('http://localhost:5000/api/users/sector-transitions', {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -138,7 +138,7 @@ const SectorTransitions = () => {
                                         fontSize: '0.95rem',
                                         boxShadow: '0 8px 20px rgba(255, 110, 20, 0.25)'
                                     }}>
-                                        {sector.match || sector.matchPercentage || '85'}% Match
+                                        {Math.round(sector.match || sector.matchPercentage || 85)}% Match
                                     </div>
                                 </div>
 
