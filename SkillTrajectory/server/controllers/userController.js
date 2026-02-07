@@ -23,6 +23,8 @@ export const updateProfile = async (req, res) => {
             user.profile.location = req.body.location || user.profile.location;
             user.profile.currentRole = req.body.currentRole || user.profile.currentRole;
             user.profile.yearsOfExperience = req.body.yearsOfExperience || user.profile.yearsOfExperience;
+            user.profile.savedTimeline = req.body.savedTimeline || user.profile.savedTimeline;
+            user.profile.isOnboardingComplete = req.body.isOnboardingComplete !== undefined ? req.body.isOnboardingComplete : user.profile.isOnboardingComplete;
 
             const updatedUser = await user.save();
             res.json({

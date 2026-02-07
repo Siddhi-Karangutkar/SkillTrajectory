@@ -54,7 +54,13 @@ export const AuthProvider = ({ children }) => {
         }
       };
       const response = await axios.put(`${API_URL}/users/profile`, profileData, config);
-      const updatedUser = { ...user, profile: response.data.profile };
+      const updatedUser = {
+        ...user,
+        profile: {
+          ...user.profile,
+          ...response.data.profile
+        }
+      };
       setUser(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));
       return updatedUser;

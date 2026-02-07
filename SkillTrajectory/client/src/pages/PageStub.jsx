@@ -1,11 +1,8 @@
 import React from 'react';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 
 const PageStub = ({ title }) => {
     return (
         <div className="page-stub">
-            <Navbar />
             <main style={{ padding: '120px 2rem', minHeight: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#f7f8fa' }}>
                 <div style={{ textAlign: 'center', padding: '4rem', background: '#fff', borderRadius: '20px', boxShadow: '0 10px 40px rgba(0,0,0,0.05)', maxWidth: '600px' }}>
                     <h1 style={{ color: '#1A1A1A', marginBottom: '1.5rem' }}>{title}</h1>
@@ -20,7 +17,6 @@ const PageStub = ({ title }) => {
                     </button>
                 </div>
             </main>
-            <Footer />
         </div>
     );
 };

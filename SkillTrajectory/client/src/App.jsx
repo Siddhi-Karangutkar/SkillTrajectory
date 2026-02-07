@@ -7,6 +7,8 @@ import ScrollToTop from './components/ScrollToTop';
 import Chatbot from './components/Chatbot';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import './App.css';
 
 import ProblemStatement from './pages/ProblemStatement';
@@ -60,6 +62,7 @@ function App() {
       ) : (
         <Router>
           <ScrollToTop />
+          <Navbar />
           <Chatbot />
           <Routes>
             <Route path="/" element={<Home />} />
@@ -90,6 +93,7 @@ function App() {
             <Route path="/dashboard/decay" element={<ProtectedRoute><SkillDecay /></ProtectedRoute>} />
             <Route path="/dashboard/fairness" element={<ProtectedRoute><FairnessMetrics /></ProtectedRoute>} />
           </Routes>
+          <Footer />
         </Router>
       )}
     </AuthProvider>

@@ -49,7 +49,12 @@ const userSchema = new mongoose.Schema({
             link: String
         }],
 
-        skills: [{ type: String }], // These are the "micro-skills"
+        skills: [{
+            name: { type: String, required: true },
+            category: { type: String, enum: ['technical', 'soft', 'tools', 'languages'], default: 'technical' },
+            level: { type: String, enum: ['Beginner', 'Learning', 'Intermediate', 'Advanced', 'Expert'], default: 'Beginner' },
+            score: { type: Number, default: 0 }
+        }],
 
         interests: [{ type: String }],
         constraints: {
@@ -57,7 +62,20 @@ const userSchema = new mongoose.Schema({
             availableTime: { type: String, default: '' }, // e.g., "Full-time", "10 hrs/week"
             incomeNeeds: { type: String, default: '' }
         },
-        isOnboardingComplete: { type: Boolean, default: false }
+        isOnboardingComplete: { type: Boolean, default: false },
+        savedTimeline: {
+            roleId: String,
+            roleTitle: String,
+            nodes: [{
+                label: String,
+                title: String,
+                subtitle: String,
+                status: { type: String, enum: ['CURRENT', 'UPCOMING', 'COMPLETED'] },
+                description: String,
+                skills: [String],
+                duration: String
+            }]
+        }
     },
     createdAt: {
         type: Date,

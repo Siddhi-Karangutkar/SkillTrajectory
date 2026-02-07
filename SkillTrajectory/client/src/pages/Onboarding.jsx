@@ -215,14 +215,14 @@ const Onboarding = () => {
 
     const handleAddSkill = (e) => {
         e.preventDefault();
-        if (newSkill.trim() && !formData.skills.includes(newSkill.trim())) {
-            setFormData({ ...formData, skills: [...formData.skills, newSkill.trim()] });
+        if (newSkill.trim() && !formData.skills.some(s => s.name === newSkill.trim())) {
+            setFormData({ ...formData, skills: [...formData.skills, { name: newSkill.trim(), category: 'technical' }] });
             setNewSkill('');
         }
     };
 
-    const removeSkill = (skillToRemove) => {
-        setFormData({ ...formData, skills: formData.skills.filter(s => s !== skillToRemove) });
+    const removeSkill = (skillName) => {
+        setFormData({ ...formData, skills: formData.skills.filter(s => s.name !== skillName) });
     };
 
     const handleSubmit = async () => {
@@ -441,11 +441,11 @@ const Onboarding = () => {
         'Unit Testing', 'Agile Methodology', 'UX Research', 'Database Design'
     ];
 
-    const toggleSuggestedSkill = (skill) => {
-        if (formData.skills.includes(skill)) {
-            removeSkill(skill);
+    const toggleSuggestedSkill = (skillName, category = 'technical') => {
+        if (formData.skills.some(s => s.name === skillName)) {
+            removeSkill(skillName);
         } else {
-            setFormData({ ...formData, skills: [...formData.skills, skill] });
+            setFormData({ ...formData, skills: [...formData.skills, { name: skillName, category }] });
         }
     };
 
@@ -485,20 +485,20 @@ const Onboarding = () => {
                         {suggested.macro.map((skill, index) => (
                             <button
                                 key={`macro-${index}`}
-                                onClick={() => toggleSuggestedSkill(skill)}
+                                onClick={() => toggleSuggestedSkill(skill, 'technical')}
                                 style={{
                                     padding: '8px 16px',
                                     borderRadius: '20px',
                                     fontSize: '0.85rem',
                                     border: '1px solid',
-                                    borderColor: formData.skills.includes(skill) ? '#FF6E14' : '#E0E0E0',
-                                    background: formData.skills.includes(skill) ? 'rgba(255, 110, 20, 0.1)' : '#FFF',
-                                    color: formData.skills.includes(skill) ? '#FF6E14' : '#666',
+                                    borderColor: formData.skills.some(s => s.name === skill) ? '#FF6E14' : '#E0E0E0',
+                                    background: formData.skills.some(s => s.name === skill) ? 'rgba(255, 110, 20, 0.1)' : '#FFF',
+                                    color: formData.skills.some(s => s.name === skill) ? '#FF6E14' : '#666',
                                     transition: 'all 0.2s ease',
                                     cursor: 'pointer'
                                 }}
                             >
-                                {formData.skills.includes(skill) ? '✓ ' : '+ '}{skill}
+                                {formData.skills.some(s => s.name === skill) ? '✓ ' : '+ '}{skill}
                             </button>
                         ))}
                     </div>
@@ -510,20 +510,20 @@ const Onboarding = () => {
                         {suggested.micro.map((skill, index) => (
                             <button
                                 key={`micro-${index}`}
-                                onClick={() => toggleSuggestedSkill(skill)}
+                                onClick={() => toggleSuggestedSkill(skill, 'soft')}
                                 style={{
                                     padding: '8px 16px',
                                     borderRadius: '20px',
                                     fontSize: '0.85rem',
                                     border: '1px solid',
-                                    borderColor: formData.skills.includes(skill) ? '#FF6E14' : '#E0E0E0',
-                                    background: formData.skills.includes(skill) ? 'rgba(255, 110, 20, 0.1)' : '#FFF',
-                                    color: formData.skills.includes(skill) ? '#FF6E14' : '#666',
+                                    borderColor: formData.skills.some(s => s.name === skill) ? '#FF6E14' : '#E0E0E0',
+                                    background: formData.skills.some(s => s.name === skill) ? 'rgba(255, 110, 20, 0.1)' : '#FFF',
+                                    color: formData.skills.some(s => s.name === skill) ? '#FF6E14' : '#666',
                                     transition: 'all 0.2s ease',
                                     cursor: 'pointer'
                                 }}
                             >
-                                {formData.skills.includes(skill) ? '✓ ' : '+ '}{skill}
+                                {formData.skills.some(s => s.name === skill) ? '✓ ' : '+ '}{skill}
                             </button>
                         ))}
                     </div>
@@ -537,7 +537,7 @@ const Onboarding = () => {
                             animate={{ scale: 1 }}
                             className="skill-chip"
                             style={{
-                                background: '#FF6E14',
+                                background: skill.category === 'soft' ? '#FF5A79' : '#FF6E14',
                                 color: '#FFF',
                                 padding: '8px 16px',
                                 borderRadius: '25px',
@@ -547,8 +547,8 @@ const Onboarding = () => {
                                 gap: '8px'
                             }}
                         >
-                            {skill}
-                            <span onClick={() => removeSkill(skill)} style={{ cursor: 'pointer', fontWeight: 'bold' }}>×</span>
+                            {skill.name}
+                            <span onClick={() => removeSkill(skill.name)} style={{ cursor: 'pointer', fontWeight: 'bold' }}>×</span>
                         </motion.div>
                     )) : (
                         <div style={{ color: '#CCC', width: '100%', textAlign: 'center', alignSelf: 'center' }}>Selected skills will appear here</div>

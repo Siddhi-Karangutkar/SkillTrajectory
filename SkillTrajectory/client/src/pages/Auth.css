@@ -218,3 +218,75 @@
 .suggestion-item:not(:last-child) {
     border-bottom: 1px solid #F0F0F0;
 }
+
+/* Proficiency Slider Styling */
+.prof-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    background: #F3F4F6;
+    border-radius: 10px;
+    cursor: pointer;
+    vertical-align: middle;
+    z-index: 20;
+    position: relative;
+    outline: none;
+}
+
+/* Base track styles */
+.prof-slider::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    cursor: pointer;
+    background: transparent;
+    /* Background is handled by dynamic linear-gradient on the input itself */
+    border-radius: 10px;
+}
+
+.prof-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 5px solid #FF6E14;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 110, 20, 0.4);
+    margin-top: -12px;
+    /* Centers thumb on 8px track */
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 30;
+    position: relative;
+}
+
+.prof-slider:active::-webkit-slider-thumb {
+    transform: scale(1.1);
+    background: #FF6E14;
+    border-color: #FFFFFF;
+}
+
+/* Firefox Support */
+.prof-slider::-moz-range-track {
+    width: 100%;
+    height: 8px;
+    background: transparent;
+    border-radius: 10px;
+}
+
+.prof-slider::-moz-range-thumb {
+    height: 22px;
+    width: 22px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 5px solid #FF6E14;
+    cursor: pointer;
+}
+
+.skill-cat-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.skill-cat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
