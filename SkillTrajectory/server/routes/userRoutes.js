@@ -8,7 +8,10 @@ import {
     getAIRoleRecommendations,
     getSkillGapAnalysis,
     getRecommendedCourses,
-    getStudyVelocityInsights
+    getStudyVelocityInsights,
+    getMarketDemandTrends,
+    getSkillDecayAnalysis,
+    getFairnessMetrics
 } from '../controllers/userController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -25,5 +28,8 @@ router.get('/role-recommendations', protect, getAIRoleRecommendations);
 router.post('/skill-gap-analysis', protect, getSkillGapAnalysis);
 router.post('/recommended-courses', protect, getRecommendedCourses);
 router.post('/study-velocity', protect, getStudyVelocityInsights);
+router.get('/market-demand-trends', protect, getMarketDemandTrends);
+router.get('/skill-decay-analysis', protect, getSkillDecayAnalysis);
+router.get('/fairness-metrics', protect, getFairnessMetrics);
 
 export default router;

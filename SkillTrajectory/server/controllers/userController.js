@@ -138,3 +138,38 @@ export const getStudyVelocityInsights = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const getMarketDemandTrends = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        const trends = await aiService.getMarketDemandTrends(user.profile);
+        res.json(trends);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const getSkillDecayAnalysis = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        const analysis = await aiService.getSkillDecayAnalysis(user.profile);
+        res.json(analysis);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const getFairnessMetrics = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        const fairness = await aiService.getFairnessMetrics(user.profile);
+        res.json(fairness);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
