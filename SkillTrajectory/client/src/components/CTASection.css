@@ -1,0 +1,66 @@
+.cta-section {
+    padding-top: 0;
+}
+
+.cta-card {
+    background: var(--secondary-color);
+    padding: 80px 60px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
+.cta-card::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    right: -100px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 110, 20, 0.15) 0%, rgba(255, 110, 20, 0) 70%);
+}
+
+.cta-content {
+    max-width: 600px;
+    position: relative;
+    z-index: 1;
+}
+
+.cta-content h2 {
+    color: white;
+    margin-bottom: 20px;
+}
+
+.cta-content p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.2rem;
+}
+
+.cta-actions {
+    display: flex;
+    gap: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 1024px) {
+    .cta-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 60px 30px;
+    }
+
+    .cta-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .cta-actions .btn {
+        width: 100%;
+    }
+}
