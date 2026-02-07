@@ -11,7 +11,8 @@ import {
     getStudyVelocityInsights,
     getMarketDemandTrends,
     getSkillDecayAnalysis,
-    getFairnessMetrics
+    getFairnessMetrics,
+    getAIJobOpenings
 } from '../controllers/userController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -31,5 +32,6 @@ router.post('/study-velocity', protect, getStudyVelocityInsights);
 router.get('/market-demand-trends', protect, getMarketDemandTrends);
 router.get('/skill-decay-analysis', protect, getSkillDecayAnalysis);
 router.get('/fairness-metrics', protect, getFairnessMetrics);
+router.post('/job-openings', protect, getAIJobOpenings);
 
 export default router;

@@ -66,7 +66,11 @@ export const getSectorTransitions = async (userProfile) => {
     const prompt = `
         User Profile:
         Current Role: ${userProfile.currentRole}
-        Skills: ${JSON.stringify(userProfile.skills)}
+        Skills: ${JSON.stringify(
+        Array.isArray(userProfile.skills)
+            ? userProfile.skills.map(s => s.name)
+            : []
+    )}
 
         Task: Analyze career pivot opportunities into 4 major sectors: FinTech, HealthTech, EdTech, RetailTech.
         
@@ -475,6 +479,50 @@ export const getFairnessMetrics = async (userProfile) => {
         return JSON.parse(chatCompletion.choices[0].message.content);
     } catch (error) {
         console.error("Groq API Error in getFairnessMetrics:", error);
+        throw new Error(`AI Service Error: ${error.message}`);
+    }
+};
+
+export const getJobOpenings = async (userProfile, targetRole) => {
+    const allSkills = Array.isArray(userProfile.skills)
+        ? userProfile.skills.map(s => s.name)
+        : [];
+
+    const prompt = `
+        User Profile:
+        Current Role: ${userProfile.currentRole}
+        Skills: ${JSON.stringify(allSkills)}
+        Target Path: ${targetRole}
+
+        Task: Generate 6 highly relevant, real-time simulated job openings that align with the user's TARGET role while leveraging their CURRENT skills and learnings.
+        
+        Return in strict JSON format with:
+        {
+            "jobs": [
+                {
+                    "title": string (e.g., Senior Full Stack Engineer),
+                    "company": string (e.g., TechNova Solutions),
+                    "location": string (e.g., New York, NY | Remote),
+                    "salary": string (e.g., $140k - $180k),
+                    "matchScore": number (60-100),
+                    "whyYouFit": string (1-2 sentences highlighting specific user skills),
+                    "skillsRequired": string[],
+                    "type": "Full-time" | "Contract" | "Remote",
+                    "applyUrl": string (A robust LinkedIn or Indeed SEARCH URL for this specific role and company to ensure the link always shows active results)
+                }
+            ]
+        }
+    `;
+
+    try {
+        const chatCompletion = await groq.chat.completions.create({
+            messages: [{ role: "user", content: prompt }],
+            model: "llama-3.3-70b-versatile",
+            response_format: { type: "json_object" }
+        });
+        return JSON.parse(chatCompletion.choices[0].message.content);
+    } catch (error) {
+        console.error("Groq API Error in getJobOpenings:", error);
         throw new Error(`AI Service Error: ${error.message}`);
     }
 };

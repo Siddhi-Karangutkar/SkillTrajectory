@@ -173,3 +173,18 @@ export const getFairnessMetrics = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const getAIJobOpenings = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        const targetRole = req.body.targetRole || user.profile.savedTimeline?.roleTitle || user.profile.currentRole;
+        if (!targetRole) return res.status(400).json({ message: 'Target role or current role is required to generate job openings' });
+
+        const jobOpenings = await aiService.getJobOpenings(user.profile, targetRole);
+        res.json(jobOpenings);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

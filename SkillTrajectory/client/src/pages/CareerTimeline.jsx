@@ -13,6 +13,7 @@ const CareerTimeline = () => {
     const [isSaving, setIsSaving] = useState(false);
     const [saveSuccess, setSaveSuccess] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [loadingJobs, setLoadingJobs] = useState(false);
 
     useEffect(() => {
         if (location.state?.selectedRole) {
@@ -33,6 +34,10 @@ const CareerTimeline = () => {
             setLoading(false);
         }
     }, [location.state, user?.profile?.savedTimeline]);
+
+    const fetchJobOpenings = () => {
+        navigate('/career/jobs');
+    };
 
     const fetchAITimeline = async (role) => {
         try {
@@ -120,22 +125,40 @@ const CareerTimeline = () => {
                             Strategic roadmap to <span style={{ color: '#FF6E14', fontWeight: '800' }}>{selectedRole?.title || selectedRole?.name || 'your target role'}</span>
                         </p>
                     </div>
-                    {(timelineNodes.length > 0) && (
+                    <div style={{ display: 'flex', gap: '15px' }}>
                         <button
-                            onClick={handleSaveTimeline}
-                            disabled={isSaving}
+                            onClick={fetchJobOpenings}
+                            disabled={loadingJobs}
                             className="auth-button"
                             style={{
                                 margin: 0,
                                 width: '200px',
                                 height: '56px',
                                 borderRadius: '14px',
-                                background: saveSuccess ? '#10B981' : '#1A1A1A'
+                                background: '#FFF',
+                                color: '#1A1A1A',
+                                border: '2px solid #EEE'
                             }}
                         >
-                            {isSaving ? 'Saving...' : saveSuccess ? '✓ Saved' : 'Save Roadmap'}
+                            {loadingJobs ? 'Searching...' : 'View Job Openings'}
                         </button>
-                    )}
+                        {(timelineNodes.length > 0) && (
+                            <button
+                                onClick={handleSaveTimeline}
+                                disabled={isSaving}
+                                className="auth-button"
+                                style={{
+                                    margin: 0,
+                                    width: '200px',
+                                    height: '56px',
+                                    borderRadius: '14px',
+                                    background: saveSuccess ? '#10B981' : '#1A1A1A'
+                                }}
+                            >
+                                {isSaving ? 'Saving...' : saveSuccess ? '✓ Saved' : 'Save Roadmap'}
+                            </button>
+                        )}
+                    </div>
                 </div>
 
                 {loading ? (

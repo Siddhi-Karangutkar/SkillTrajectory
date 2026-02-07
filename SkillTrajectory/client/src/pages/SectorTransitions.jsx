@@ -29,7 +29,8 @@ const SectorTransitions = () => {
             });
             const data = await response.json();
             // The AI service returns a JSON object. We expect it to have a sectors array.
-            setProcessedSectors(data.sectors || data);
+            const sectors = data.sectors || (Array.isArray(data) ? data : []);
+            setProcessedSectors(sectors);
         } catch (error) {
             console.error('Error fetching AI transitions:', error);
         } finally {

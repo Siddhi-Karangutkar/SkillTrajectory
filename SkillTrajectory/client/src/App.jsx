@@ -24,6 +24,7 @@ import RoleRecommendations from './pages/RoleRecommendations';
 import CareerTimeline from './pages/CareerTimeline';
 import SectorTransitions from './pages/SectorTransitions';
 import CareerSimulator from './pages/CareerSimulator';
+import JobOpenings from './pages/JobOpenings';
 
 // // Learning Path Pages
 import SkillGapAnalysis from './pages/SkillGapAnalysis';
@@ -82,6 +83,7 @@ function App() {
             <Route path="/career/timeline" element={<ProtectedRoute><CareerTimeline /></ProtectedRoute>} />
             <Route path="/career/transitions" element={<ProtectedRoute><SectorTransitions /></ProtectedRoute>} />
             <Route path="/career/simulator" element={<ProtectedRoute><CareerSimulator /></ProtectedRoute>} />
+            <Route path="/career/jobs" element={<ProtectedRoute><JobOpenings /></ProtectedRoute>} />
 
             {/* Learning Path Routes */}
             <Route path="/learning/gap-analysis" element={<ProtectedRoute><SkillGapAnalysis /></ProtectedRoute>} />
