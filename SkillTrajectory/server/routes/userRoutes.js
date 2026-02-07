@@ -5,7 +5,10 @@ import {
     getAICareerInsights,
     getAISectorTransitions,
     getAICareerSimulation,
-    getAIRoleRecommendations
+    getAIRoleRecommendations,
+    getSkillGapAnalysis,
+    getRecommendedCourses,
+    getStudyVelocityInsights
 } from '../controllers/userController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -19,5 +22,8 @@ router.post('/career-insights', protect, getAICareerInsights);
 router.get('/sector-transitions', protect, getAISectorTransitions);
 router.post('/career-simulation', protect, getAICareerSimulation);
 router.get('/role-recommendations', protect, getAIRoleRecommendations);
+router.post('/skill-gap-analysis', protect, getSkillGapAnalysis);
+router.post('/recommended-courses', protect, getRecommendedCourses);
+router.post('/study-velocity', protect, getStudyVelocityInsights);
 
 export default router;

@@ -100,3 +100,41 @@ export const getAIRoleRecommendations = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const getSkillGapAnalysis = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        const targetRole = req.body.targetRole || user.profile.savedTimeline?.roleTitle;
+
+        const analysis = await aiService.getSkillGapAnalysis(user.profile, targetRole);
+        res.json(analysis);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const getRecommendedCourses = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        const filters = req.body.filters;
+
+        const courses = await aiService.getRecommendedCourses(user.profile, filters);
+        res.json(courses);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const getStudyVelocityInsights = async (req, res) => {
+    try {
+        const { courses, weeklyHours } = req.body;
+        const insights = await aiService.getStudyVelocityInsights(courses, weeklyHours);
+        res.json(insights);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
