@@ -13,7 +13,7 @@ import ProblemStatement from './pages/ProblemStatement';
 import HowItWorks from './pages/HowItWorks';
 
 // Profile Pages
-import CreateProfile from './pages/CreateProfile';
+import Onboarding from './pages/Onboarding';
 import EditSkills from './pages/EditSkills';
 import SkillLevels from './pages/SkillLevels';
 
@@ -35,10 +35,10 @@ import FairnessMetrics from './pages/FairnessMetrics';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
-  const { token, loading } = useAuth();
+  const { user, loading } = useAuth();
 
   if (loading) return <Preloader />;
-  if (!token) return <Navigate to="/login" />;
+  if (!user) return <Navigate to="/login" />;
 
   return children;
 };
@@ -70,7 +70,7 @@ function App() {
             <Route path="/solution" element={<HowItWorks />} />
 
             {/* Profile Routes */}
-            <Route path="/profile/create" element={<ProtectedRoute><CreateProfile /></ProtectedRoute>} />
+            <Route path="/profile/create" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
             <Route path="/profile/edit-skills" element={<ProtectedRoute><EditSkills /></ProtectedRoute>} />
             <Route path="/profile/skill-levels" element={<ProtectedRoute><SkillLevels /></ProtectedRoute>} />
 

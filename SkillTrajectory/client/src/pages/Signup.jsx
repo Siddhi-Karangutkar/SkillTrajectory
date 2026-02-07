@@ -16,7 +16,7 @@ const Signup = () => {
         setError('');
         try {
             await signup(username, email, password);
-            navigate('/profile/create'); // Redirect to create profile after signup
+            navigate('/profile/create'); // Redirect to onboarding
         } catch (err) {
             setError(err);
         }

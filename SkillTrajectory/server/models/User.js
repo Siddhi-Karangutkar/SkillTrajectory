@@ -20,11 +20,44 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     profile: {
+        fullName: { type: String, default: '' },
+        phone: { type: String, default: '' },
         bio: { type: String, default: '' },
-        skills: [{ type: String }],
-        location: { type: String, default: '' },
         currentRole: { type: String, default: '' },
-        yearsOfExperience: { type: Number, default: 0 }
+        location: { type: String, default: '' },
+
+        education: [{
+            school: String,
+            degree: String,
+            fieldOfStudy: String,
+            startYear: String,
+            endYear: String
+        }],
+
+        experience: [{
+            company: String,
+            position: String,
+            location: String,
+            startDate: String,
+            endDate: String,
+            description: String
+        }],
+
+        projects: [{
+            title: String,
+            description: String,
+            link: String
+        }],
+
+        skills: [{ type: String }], // These are the "micro-skills"
+
+        interests: [{ type: String }],
+        constraints: {
+            preferredLocation: { type: String, default: '' },
+            availableTime: { type: String, default: '' }, // e.g., "Full-time", "10 hrs/week"
+            incomeNeeds: { type: String, default: '' }
+        },
+        isOnboardingComplete: { type: Boolean, default: false }
     },
     createdAt: {
         type: Date,

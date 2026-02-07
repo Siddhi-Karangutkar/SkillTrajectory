@@ -14,8 +14,12 @@ const Login = () => {
         e.preventDefault();
         setError('');
         try {
-            await login(email, password);
-            navigate('/'); // Redirect to home after login
+            const userData = await login(email, password);
+            if (userData.profile?.isOnboardingComplete) {
+                navigate('/');
+            } else {
+                navigate('/profile/create');
+            }
         } catch (err) {
             setError(err);
         }
