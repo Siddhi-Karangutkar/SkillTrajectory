@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from "../context/AuthContext";
 import AnimatedLogo from './AnimatedLogo';
 import './Navbar.css';
 
@@ -53,10 +53,10 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Close mobile menu on route change
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMobileMenuOpen(false);
     setActiveDropdown(null);
   }, [location]);
@@ -86,6 +86,11 @@ const Navbar = () => {
     if (window.innerWidth > 968) {
       setActiveDropdown(null);
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   return (
@@ -133,8 +138,10 @@ const Navbar = () => {
         <div className="nav-actions desktop-actions">
           {user ? (
             <>
-              <span className="user-welcome">Hello, <strong>{user.username}</strong></span>
-              <button onClick={logout} className="btn btn-outline">Logout</button>
+              <span className="user-welcome">
+                Welcome, <strong>{user.username}</strong>
+              </span>
+              <button onClick={handleLogout} className="btn btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}>Logout</button>
             </>
           ) : (
             <>
@@ -182,11 +189,19 @@ const Navbar = () => {
               </div>
             ))}
             <div className="mobile-actions">
-              <Link to="/profile/create" className="btn btn-primary full-width">Get Started</Link>
+              {user ? (
+                <>
+                  <div className="mobile-welcome" style={{ padding: '0 8px', marginBottom: '16px', fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
+                    Logged in as <strong>{user.username}</strong>
+                  </div>
+                  <button onClick={handleLogout} className="btn btn-outline full-width">Logout</button>
+                </>
+              ) : (
+                <Link to="/signup" className="btn btn-primary full-width">Get Started</Link>
+              )}
             </div>
           </div>
         </div>
-
       </div>
     </nav>
   );

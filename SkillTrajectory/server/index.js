@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 dotenv.config();
 
@@ -11,6 +13,10 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
 // Basic Route
 app.get('/', (req, res) => {
@@ -27,11 +33,19 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
-// Database connection stub
+// Database connection
 if (process.env.MONGODB_URI) {
-    mongoose.connect(process.env.MONGODB_URI)
-        .then(() => console.log('Connected to MongoDB'))
-        .catch(err => console.error('MongoDB connection error:', err));
+    mongoose.connect(process.env.MONGODB_URI, {
+        serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+    })
+        .then(() => console.log('✅ Connected to MongoDB'))
+        .catch(err => {
+            console.error('❌ MongoDB connection error:', err.message);
+            console.log('Ensure your MongoDB service is running (e.g., "sudo service mongod start" or using MongoDB Compass)');
+        });
 } else {
-    console.log('No MONGODB_URI found, running without DB');
+    console.warn('⚠️ No MONGODB_URI found in .env. Database features will be unavailable.');
 }
+
+// Disable Mongoose command buffering to avoid 10s timeouts on queries
+mongoose.set('bufferCommands', false);
