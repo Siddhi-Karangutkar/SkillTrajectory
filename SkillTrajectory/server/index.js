@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import communityRoutes from './routes/communityRoutes.js';
+import interviewRoutes from './routes/interviewRoutes.js';
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/community', communityRoutes);
+app.use('/api/interview', interviewRoutes);
 
 // Basic Route
 app.get('/', (req, res) => {

@@ -67,6 +67,14 @@ const userSchema = new mongoose.Schema({
         streak: { type: Number, default: 0 },
         points: { type: Number, default: 0 },
         lastActive: { type: Date, default: Date.now },
+        activityLogs: [{
+            date: { type: String, required: true }, // Format: YYYY-MM-DD for easy grouping
+            count: { type: Number, default: 0 },
+            activities: [{
+                type: { type: String }, // e.g., 'COURSE_SEARCH', 'TIMELINE_SAVE', 'REVIEW_POST'
+                timestamp: { type: Date, default: Date.now }
+            }]
+        }],
         isOnboardingComplete: { type: Boolean, default: false },
         savedTimeline: {
             roleId: String,

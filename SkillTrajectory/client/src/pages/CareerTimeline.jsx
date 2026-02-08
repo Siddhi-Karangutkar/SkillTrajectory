@@ -111,6 +111,33 @@ const CareerTimeline = () => {
         }
     };
 
+    const handleUpdateNodeStatus = async (index, newStatus) => {
+        try {
+            const token = user?.token;
+            const response = await fetch('http://localhost:5000/api/users/timeline/status', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ nodeIndex: index, status: newStatus })
+            });
+
+            if (response.ok) {
+                const updatedTimeline = await response.json();
+                setTimelineNodes(updatedTimeline.nodes);
+                // Also update user profile in context if it's there
+                const userRes = await fetch('http://localhost:5000/api/users/profile', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const userData = await userRes.json();
+                updateProfile(userData.profile);
+            }
+        } catch (error) {
+            console.error('Error updating status:', error);
+        }
+    };
+
     if (!user) return null;
 
     return (
@@ -246,7 +273,7 @@ const CareerTimeline = () => {
                                         {node.description}
                                     </p>
 
-                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '25px' }}>
                                         {node.skills && node.skills.map((skill, si) => (
                                             <span key={si} style={{
                                                 background: '#F8F9FB',
@@ -260,6 +287,50 @@ const CareerTimeline = () => {
                                                 {skill}
                                             </span>
                                         ))}
+                                    </div>
+
+                                    {/* Action Buttons */}
+                                    <div style={{ display: 'flex', gap: '12px', paddingTop: '20px', borderTop: '1px solid #F0F0F0' }}>
+                                        {node.status !== 'COMPLETED' ? (
+                                            <>
+                                                <button
+                                                    onClick={() => handleUpdateNodeStatus(index, 'COMPLETED')}
+                                                    style={{
+                                                        padding: '10px 20px',
+                                                        borderRadius: '10px',
+                                                        background: '#10B981',
+                                                        color: '#FFF',
+                                                        border: 'none',
+                                                        fontWeight: '700',
+                                                        fontSize: '0.9rem',
+                                                        cursor: 'pointer'
+                                                    }}
+                                                >
+                                                    Mark as Complete (+100 XP)
+                                                </button>
+                                                {node.status !== 'CURRENT' && (
+                                                    <button
+                                                        onClick={() => handleUpdateNodeStatus(index, 'CURRENT')}
+                                                        style={{
+                                                            padding: '10px 20px',
+                                                            borderRadius: '10px',
+                                                            background: '#FFF',
+                                                            color: '#FF6E14',
+                                                            border: '2px solid #FF6E14',
+                                                            fontWeight: '700',
+                                                            fontSize: '0.9rem',
+                                                            cursor: 'pointer'
+                                                        }}
+                                                    >
+                                                        Set as Current
+                                                    </button>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#10B981', fontWeight: '800' }}>
+                                                <span>✓ Milestone Achievement Unlocked</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </motion.div>

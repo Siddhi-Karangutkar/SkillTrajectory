@@ -6,6 +6,7 @@ import './Navbar.css';
 
 const NAV_ITEMS = [
   { label: 'Home', path: '/' },
+  { label: 'My Dashboard', path: '/dashboard' },
   {
     label: 'Profile',
     dropdown: [
@@ -20,7 +21,9 @@ const NAV_ITEMS = [
       { label: 'Role Recommendations', path: '/career/recommendations' },
       { label: 'Career Timeline', path: '/career/timeline' },
       { label: 'Sector Transitions', path: '/career/transitions' },
-      { label: 'Career Simulator', path: '/career/simulator' }
+      { label: 'Career Simulator', path: '/career/simulator' },
+      { label: 'Job Openings', path: '/career/jobs' },
+      { label: 'Skill Wastage', path: '/career/skill-wastage' }
     ]
   },
   {
@@ -28,11 +31,12 @@ const NAV_ITEMS = [
     dropdown: [
       { label: 'Skill Gap Analysis', path: '/learning/gap-analysis' },
       { label: 'Recommended Courses', path: '/learning/courses' },
-      { label: 'Learning Duration', path: '/learning/duration' }
+      { label: 'Learning Duration', path: '/learning/duration' },
+      { label: 'i Interview', path: '/learning/interview' }
     ]
   },
   {
-    label: 'Dashboard',
+    label: 'Market Analytics',
     dropdown: [
       { label: 'Skill Demand Trends', path: '/dashboard/trends' },
       { label: 'Skill Decay', path: '/dashboard/decay' },

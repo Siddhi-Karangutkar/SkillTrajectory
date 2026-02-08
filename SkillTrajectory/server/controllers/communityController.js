@@ -1,5 +1,6 @@
 import User from '../models/User.js';
 import Review from '../models/Review.js';
+import { logActivity } from '../utils/activityLogger.js';
 
 // @desc    Get leaderboard
 // @route   GET /api/community/leaderboard
@@ -47,6 +48,8 @@ export const createReview = async (req, res) => {
             rating
         });
 
+        await logActivity(req.user.id, 'REVIEW_POST');
+
         const populatedReview = await Review.findById(review._id)
             .populate('user', 'username email profile.fullName profile.currentRole profile.linkedIn');
 
@@ -79,6 +82,7 @@ export const updateStreak = async (req, res) => {
         user.profile.points += 10; // 10 points for daily activity
         user.profile.lastActive = now;
 
+        await logActivity(user._id, 'DAILY_STREAK');
         await user.save();
         res.json({ streak: user.profile.streak, points: user.profile.points });
     } catch (error) {

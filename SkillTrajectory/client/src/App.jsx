@@ -25,6 +25,8 @@ import CareerTimeline from './pages/CareerTimeline';
 import SectorTransitions from './pages/SectorTransitions';
 import CareerSimulator from './pages/CareerSimulator';
 import JobOpenings from './pages/JobOpenings';
+import SkillWastage from './pages/SkillWastage';
+import AIInterview from './pages/AIInterview';
 
 // // Learning Path Pages
 import SkillGapAnalysis from './pages/SkillGapAnalysis';
@@ -36,6 +38,7 @@ import SkillDemandTrends from './pages/SkillDemandTrends';
 import SkillDecay from './pages/SkillDecay';
 import FairnessMetrics from './pages/FairnessMetrics';
 import Community from './pages/Community';
+import UserDashboard from './pages/UserDashboard';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -85,16 +88,19 @@ function App() {
             <Route path="/career/transitions" element={<ProtectedRoute><SectorTransitions /></ProtectedRoute>} />
             <Route path="/career/simulator" element={<ProtectedRoute><CareerSimulator /></ProtectedRoute>} />
             <Route path="/career/jobs" element={<ProtectedRoute><JobOpenings /></ProtectedRoute>} />
+            <Route path="/career/skill-wastage" element={<ProtectedRoute><SkillWastage /></ProtectedRoute>} />
 
             {/* Learning Path Routes */}
             <Route path="/learning/gap-analysis" element={<ProtectedRoute><SkillGapAnalysis /></ProtectedRoute>} />
             <Route path="/learning/courses" element={<ProtectedRoute><RecommendedCourses /></ProtectedRoute>} />
             <Route path="/learning/duration" element={<ProtectedRoute><LearningDuration /></ProtectedRoute>} />
+            <Route path="/learning/interview" element={<ProtectedRoute><AIInterview /></ProtectedRoute>} />
 
             {/* Dashboard Routes */}
             <Route path="/dashboard/trends" element={<ProtectedRoute><SkillDemandTrends /></ProtectedRoute>} />
             <Route path="/dashboard/decay" element={<ProtectedRoute><SkillDecay /></ProtectedRoute>} />
             <Route path="/dashboard/fairness" element={<ProtectedRoute><FairnessMetrics /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
             <Route path="/community" element={<ProtectedRoute><Community /></ProtectedRoute>} />
           </Routes>
           <Footer />

@@ -3,9 +3,9 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const groq = new Groq({
-    apiKey: process.env.GROQ_API_KEY,
-});
+const mainGroq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const interviewGroq = new Groq({ apiKey: process.env.GROQ_API_INTERVIEW || process.env.GROQ_API_KEY });
+const groq = mainGroq;
 
 export const getCareerInsights = async (userProfile, targetRole) => {
     const prompt = `
@@ -527,3 +527,138 @@ export const getJobOpenings = async (userProfile, targetRole) => {
     }
 };
 
+export const getSkillWastageJobs = async (userProfile) => {
+    const microSkills = Array.isArray(userProfile.skills?.soft)
+        ? userProfile.skills.soft.map(s => s.name)
+        : [];
+
+    const technicalSkills = Array.isArray(userProfile.skills?.technical)
+        ? userProfile.skills.technical.map(s => s.name)
+        : [];
+
+    const prompt = `
+        User Profile:
+        Current Role: ${userProfile.currentRole}
+        Technical Skills: ${JSON.stringify(technicalSkills)}
+        Micro-Skills (Soft Skills): ${JSON.stringify(microSkills)}
+
+        Task: Generate 6 highly relevant, real-time simulated job openings specifically in the GOVT or NGO sectors.
+        Crucial Focus: These jobs should prioritize the user's MICRO-SKILLS (soft skills like leadership, communication, strategic planning) which are often underutilized ("wasted") in purely technical roles.
+        
+        Return in strict JSON format with:
+        {
+            "jobs": [
+                {
+                    "title": string (e.g., Program Director, Public Policy Analyst),
+                    "organization": string (e.g., United Nations, Dept of Education),
+                    "location": string (e.g., Washington, DC | Remote),
+                    "sector": "Government" | "NGO" | "Public Sector",
+                    "impactScore": number (80-100),
+                    "whyYouFit": string (Explain how their technical background + micro-skills make them unique for this public service role),
+                    "skillsValued": string[],
+                    "salary": string (Estimated salary or 'Grade Level'),
+                    "applyUrl": string (A robust LinkedIn or Indeed SEARCH URL for this specific role and organization)
+                }
+            ]
+        }
+    `;
+
+    try {
+        const chatCompletion = await groq.chat.completions.create({
+            messages: [{ role: "user", content: prompt }],
+            model: "llama-3.3-70b-versatile",
+            response_format: { type: "json_object" }
+        });
+        return JSON.parse(chatCompletion.choices[0].message.content);
+    } catch (error) {
+        console.error("Groq API Error in getSkillWastageJobs:", error);
+        throw new Error(`AI Service Error: ${error.message}`);
+    }
+};
+
+export const getInterviewQuestion = async (topic, userProfile, history = []) => {
+    const prompt = `
+        You are an elite female corporate interviewer named "Aria". 
+        Topic: ${topic}
+        User Context: ${JSON.stringify(userProfile)}
+        Interview History: ${JSON.stringify(history)}
+
+        Task: Generate the NEXT interview question for the user. 
+        Style: Professional, sharp, but encouraging. 
+        Constraint: **Be extremely concise.** Your question and transition MUST be no more than 1-2 sentences.
+        Adaptive Logic:
+        - If 'History' contains answers, your NEXT question should be a "Drill-down". 
+        - Pick a specific detail, technical claim, or behavioral situation from the LAST answer and ask for more depth, a counter-example, or an edge case.
+        - Persona Context: You are "Aria". You are sharp, observant, and you don't let vague answers slide.
+        - Briefly acknowledge the last point made before pivoting into the deep-dive question.
+        
+        Return in strict JSON format:
+        {
+            "question": string (Include the conversational transition/acknowledgment here),
+            "type": "TECHNICAL" | "BEHAVIORAL" | "SITUATIONAL",
+            "context": string (Briefly explain why you are asking this)
+        }
+    `;
+
+    try {
+        const chatCompletion = await interviewGroq.chat.completions.create({
+            messages: [{ role: "user", content: prompt }],
+            model: "llama-3.3-70b-versatile",
+            response_format: { type: "json_object" }
+        });
+        return JSON.parse(chatCompletion.choices[0].message.content);
+    } catch (error) {
+        console.error("Groq Interview Error (getInterviewQuestion):", error);
+        throw new Error(`Interview AI Error: ${error.message}`);
+    }
+};
+
+export const analyzeInterviewResponse = async (question, answer, userProfile) => {
+    const prompt = `
+        You are "Aria", an expert interview coach.
+        Question Asked: ${question}
+        User's Answer: ${answer}
+        User Profile: ${JSON.stringify(userProfile)}
+
+        Task: Analyze the user's answer and provide detailed feedback.
+        Special Context: The user is in "Training Mode". 
+        Constraint: **Be extremely concise.** Your feedback field MUST be no more than 1-2 sentences. 
+        Persona Style: Interactive & Conversational.
+        - Start feedback with conversational fillers like "Hmm," "I see," "Interesting," or "That's a valid perspective."
+        - Be reactive to the user's tone. If they sound confident, challenge them. If they sound unsure, be more encouraging.
+        - If the user's answer is weak, nonsensical, or they say "I don't know", you MUST provide a "simpleExplanation" field explaining the core concept.
+        - Analyze simulated behavioral aspects based on the answer text structure (Confidence, Eye Contact, Body Language).
+        
+        Return in strict JSON format:
+        {
+            "scores": {
+                "technical": number,
+                "clarity": number,
+                "impact": number
+            },
+            "behaviorAnalysis": {
+                "confidence": number (0-100),
+                "eyeContact": number (0-100),
+                "bodyLanguage": number (0-100),
+                "reasoning": string
+            },
+            "feedback": string (Aria's spoken response),
+            "simpleExplanation": string (A simple, encouraging explanation for training purposes. Only populate if needed),
+            "suggestions": string[],
+            "isSatisfactory": boolean,
+            "nextStep": string
+        }
+    `;
+
+    try {
+        const chatCompletion = await interviewGroq.chat.completions.create({
+            messages: [{ role: "user", content: prompt }],
+            model: "llama-3.3-70b-versatile",
+            response_format: { type: "json_object" }
+        });
+        return JSON.parse(chatCompletion.choices[0].message.content);
+    } catch (error) {
+        console.error("Groq Interview Error (analyzeInterviewResponse):", error);
+        throw new Error(`Interview AI Error: ${error.message}`);
+    }
+};
