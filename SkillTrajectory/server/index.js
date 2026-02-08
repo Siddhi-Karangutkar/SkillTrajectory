@@ -6,6 +6,7 @@ import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import communityRoutes from './routes/communityRoutes.js';
 import interviewRoutes from './routes/interviewRoutes.js';
+import chatRoutes from './routes/chatRoutes.js';
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/community', communityRoutes);
 app.use('/api/interview', interviewRoutes);
+app.use('/api/chat', chatRoutes);
 
 // Basic Route
 app.get('/', (req, res) => {

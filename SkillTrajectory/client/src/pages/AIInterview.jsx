@@ -437,17 +437,46 @@ const AIInterview = () => {
                         {/* Main Session View */}
                         <div>
                             <div style={{ position: 'relative', borderRadius: '32px', overflow: 'hidden', background: '#000', height: '600px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
+                                {/* Aria Avatar Container for Halo */}
+                                <motion.div
+                                    animate={isListening ? {
+                                        boxShadow: [
+                                            'inset 0 0 0px #6366F1',
+                                            'inset 0 0 40px rgba(99, 102, 241, 0.4)',
+                                            'inset 0 0 0px #6366F1'
+                                        ]
+                                    } : { boxShadow: 'inset 0 0 0px #6366F1' }}
+                                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                                    style={{
+                                        position: 'absolute',
+                                        inset: 0,
+                                        zIndex: 1,
+                                        pointerEvents: 'none',
+                                        borderRadius: '32px'
+                                    }}
+                                />
+
                                 {/* Aria Avatar */}
-                                <img
+                                <motion.img
                                     src={ariaAvatar}
                                     alt="Aria"
+                                    animate={{
+                                        scale: isAriaSpeaking ? [1, 1.02, 1] : [1, 1.01, 1],
+                                        filter: isAriaSpeaking
+                                            ? ['brightness(1) contrast(1)', 'brightness(1.2) contrast(1.1)', 'brightness(1) contrast(1)']
+                                            : 'brightness(1)',
+                                    }}
+                                    transition={{
+                                        duration: isAriaSpeaking ? 0.4 : 3, // Rapid pulse for speech, slow for breathing
+                                        repeat: Infinity,
+                                        ease: "easeInOut"
+                                    }}
                                     style={{
                                         width: '100%',
                                         height: '100%',
                                         objectFit: 'cover',
-                                        objectPosition: 'center 20%', // Ensure head is visible, not just chest/lips
-                                        filter: isAriaSpeaking ? 'brightness(1.1) contrast(1.1)' : 'brightness(1)',
-                                        transition: 'all 0.3s ease'
+                                        objectPosition: 'center 20%',
+                                        borderRadius: '32px'
                                     }}
                                 />
 
@@ -478,7 +507,15 @@ const AIInterview = () => {
                                                 fontSize: '1.5rem',
                                                 flexShrink: 0
                                             }}>
-                                                👩‍💼
+                                                <motion.div
+                                                    animate={isAriaSpeaking ? {
+                                                        scale: [1, 1.2, 1],
+                                                        rotate: [0, 5, -5, 0]
+                                                    } : {}}
+                                                    transition={{ duration: 0.5, repeat: Infinity }}
+                                                >
+                                                    👩‍💼
+                                                </motion.div>
                                             </div>
                                             {isAriaSpeaking && (
                                                 <motion.div
