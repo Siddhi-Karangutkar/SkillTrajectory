@@ -9,7 +9,7 @@ const JobOpenings = () => {
     const navigate = useNavigate();
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [selectedRole, setSelectedRole] = useState(user?.profile?.savedTimeline?.roleTitle || 'Your Target Role');
+    const [selectedRole, setSelectedRole] = useState(user?.profile?.targetRole || user?.profile?.savedTimeline?.roleTitle || 'Your Target Role');
 
     useEffect(() => {
         fetchJobOpenings();

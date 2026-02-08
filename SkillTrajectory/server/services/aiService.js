@@ -269,16 +269,29 @@ export const getSkillGapAnalysis = async (userProfile, targetRole) => {
 };
 
 export const getRecommendedCourses = async (userProfile, filters) => {
+    const timelineSkills = userProfile.savedTimeline?.roadmap
+        ? userProfile.savedTimeline.roadmap.flatMap(phase => [...phase.skills, ...phase.tools]).slice(0, 10).join(', ')
+        : '';
+
     const prompt = `
         User Profile:
         Current Role: ${userProfile.currentRole}
         Skills: ${JSON.stringify(userProfile.skills)}
-        Skill Gaps: (Analyse based on common gaps for current vs next level role)
+        Target Path: ${userProfile.savedTimeline?.roleTitle || 'Not specified'}
+        Timeline Priority Skills: ${timelineSkills || 'None'}
         
         Filters:
         Target Skill: ${filters?.targetSkill || 'Any'}
         Provider: ${filters?.provider || 'Any'}
         Duration: ${filters?.duration || 'Any'}
+
+        Task: Recommend 6-9 HIGHLY RELEVANT courses.
+        PRIORITY: 
+        1. If "Target Skill" is set, prioritize that specific skill.
+        2. Else, prioritize skills from the user's "Timeline Priority Skills" to help them progress in their roadmap.
+        3. Ensure courses are from major platforms (Udemy, Coursera, Pluralsight, LinkedIn Learning, EdX).
+        
+        Return in strict JSON format with the following structure:
 
         Task: Recommend 6-9 HIGHLY RELEVANT, REALISTIC courses from major platforms (Udemy, Coursera, Pluralsight, LinkedIn Learning, EdX).
         Ensure the titles and providers are real. 
@@ -546,9 +559,14 @@ export const getJobOpenings = async (userProfile, targetRole) => {
         User Profile:
         Current Role: ${userProfile.currentRole}
         Skills: ${JSON.stringify(allSkills)}
-        Target Path: ${targetRole}
+        Target Path: ${targetRole || 'Not specified'}
 
-        Task: Generate 6 highly relevant, real-time simulated job openings that align with the user's TARGET role while leveraging their CURRENT skills and learnings.
+        Task: Generate 6 highly relevant, real-time simulated job openings.
+        
+        PRIORITY LOGIC:
+        1. FIRST 4 JOBS: Must be strictly for the TARGET PATH (${targetRole}). These should be "Reach" roles or direct next steps.
+        2. REMAINING 2 JOBS: Must be matches for the CURRENT ROLE & SKILLS (${userProfile.currentRole}). These are "Safe/Immediate" options.
+        3. REAL-TIME FOCUS: Use company names that are currently hiring or known for these roles.
         
         Return in strict JSON format with:
         {
@@ -769,6 +787,7 @@ export const getAISuggestions = async (type, query) => {
         - If type is "role", return job titles like "Senior Software Engineer", "Product Manager", etc.
         - If type is "degree", return standard degrees like "Bachelor of Science", "MBA", etc.
         - If type is "fieldOfStudy", return majors like "Computer Science", "Artificial Intelligence", etc.
+        - If type is "skill", return technical or soft skills like "React", "System Design", "Public Speaking", etc.
         
         Return in strict JSON format:
         {

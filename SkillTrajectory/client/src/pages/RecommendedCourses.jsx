@@ -10,7 +10,7 @@ const RecommendedCourses = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filters, setFilters] = useState({
-        targetSkill: location.state?.targetSkill || 'All Skills', // Initialize with state
+        targetSkill: location.state?.targetSkill || '', // Initialize with state or empty
         provider: 'All Platforms',
         duration: 'Any Duration'
     });
@@ -18,6 +18,19 @@ const RecommendedCourses = () => {
     const [showVelocity, setShowVelocity] = useState(false);
     const [weeklyHours, setWeeklyHours] = useState('');
     const [velocityResult, setVelocityResult] = useState(null);
+    const [skillSuggestions, setSkillSuggestions] = useState([]);
+
+    const fetchSkillSuggestions = async (query) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/users/suggestions?type=skill&query=${query}`, {
+                headers: { 'Authorization': `Bearer ${user?.token}` }
+            });
+            const data = await response.json();
+            setSkillSuggestions(data.suggestions || []);
+        } catch (error) {
+            console.error("Error fetching skill suggestions:", error);
+        }
+    };
 
     useEffect(() => {
         if (user) {
@@ -32,7 +45,7 @@ const RecommendedCourses = () => {
 
             // Map 'All X' to null/undefined for backend
             const apiFilters = {
-                targetSkill: filters.targetSkill === 'All Skills' ? null : filters.targetSkill,
+                targetSkill: filters.targetSkill === '' || filters.targetSkill === 'All Skills' ? null : filters.targetSkill,
                 provider: filters.provider === 'All Platforms' ? null : filters.provider,
                 duration: filters.duration === 'Any Duration' ? null : filters.duration
             };
@@ -102,19 +115,62 @@ const RecommendedCourses = () => {
                     >
                         <h2 style={{ fontSize: '1.5rem', fontWeight: '900', color: '#1A1A1A', marginBottom: '2rem' }}>Precision Filters</h2>
 
-                        {/* Target Skill Filter */}
-                        <div style={{ marginBottom: '2rem' }}>
+                        {/* Target Skill Filter (Autocomplete) */}
+                        <div style={{ marginBottom: '2rem', position: 'relative' }}>
                             <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '800', color: '#828282', textTransform: 'uppercase', marginBottom: '10px' }}>Target Skill</label>
-                            <select
-                                value={filters.targetSkill}
-                                onChange={(e) => handleFilterChange('targetSkill', e.target.value)}
+                            <input
+                                type="text"
+                                value={filters.targetSkill === 'All Skills' ? '' : filters.targetSkill}
+                                onChange={(e) => {
+                                    handleFilterChange('targetSkill', e.target.value);
+                                    if (e.target.value.length > 2) {
+                                        fetchSkillSuggestions(e.target.value);
+                                    } else {
+                                        setSkillSuggestions([]);
+                                    }
+                                }}
+                                placeholder="Type a skill (e.g. React, Python)"
                                 style={{ width: '100%', padding: '12px', borderRadius: '12px', border: '1px solid #E5E7EB', fontSize: '0.9rem', fontWeight: '600', color: '#1A1A1A', outline: 'none' }}
-                            >
-                                <option>All Skills</option>
-                                {user.profile.skills?.map((skill, idx) => (
-                                    <option key={idx} value={skill.name}>{skill.name}</option>
-                                ))}
-                            </select>
+                            />
+                            {skillSuggestions.length > 0 && (
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '100%',
+                                    left: 0,
+                                    right: 0,
+                                    background: '#FFF',
+                                    borderRadius: '12px',
+                                    boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+                                    zIndex: 10,
+                                    marginTop: '5px',
+                                    maxHeight: '200px',
+                                    overflowY: 'auto',
+                                    border: '1px solid #F0F0F0'
+                                }}>
+                                    {skillSuggestions.map((skill, idx) => (
+                                        <div
+                                            key={idx}
+                                            onClick={() => {
+                                                handleFilterChange('targetSkill', skill);
+                                                setSkillSuggestions([]);
+                                            }}
+                                            style={{
+                                                padding: '12px 16px',
+                                                cursor: 'pointer',
+                                                fontSize: '0.9rem',
+                                                fontWeight: '500',
+                                                color: '#1A1A1A',
+                                                borderBottom: idx === skillSuggestions.length - 1 ? 'none' : '1px solid #F0F0F0',
+                                                transition: 'background 0.2s'
+                                            }}
+                                            onMouseEnter={(e) => e.target.style.background = '#F8F9FB'}
+                                            onMouseLeave={(e) => e.target.style.background = '#FFF'}
+                                        >
+                                            {skill}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         {/* Learning Provider Filter */}
