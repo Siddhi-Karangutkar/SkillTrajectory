@@ -31,6 +31,10 @@ export const getCareerInsights = async (userProfile, targetRole) => {
                     "subtitle": string,
                     "description": string,
                     "skills": string[],
+                    "tools": string[],
+                    "certificationTargets": string[],
+                    "keyProjects": string[], // Actionable project ideas
+                    "softSkillsFocus": string[],
                     "duration": "Present"
                 },
                 ... (6 phases total)
@@ -73,6 +77,7 @@ export const getSectorTransitions = async (userProfile) => {
     )}
 
         Task: Analyze career pivot opportunities into 4 major sectors: FinTech, HealthTech, EdTech, RetailTech.
+        Focus on REAL-TIME market conditions, emerging trends, and live opportunities.
         
         Return in strict JSON format with the following structure:
         {
@@ -84,7 +89,10 @@ export const getSectorTransitions = async (userProfile) => {
                     "transferableSkills": string[],
                     "bridgeSkills": string[],
                     "difficulty": "Low" | "Medium" | "Hard",
-                    "salaryUpside": number
+                    "salaryUpside": number,
+                    "activeJobs": number,
+                    "growthTrend": string,
+                    "marketVelocity": "High" | "Stable" | "Explosive"
                 },
                 ...
             ]
@@ -164,10 +172,16 @@ export const getRoleRecommendations = async (userProfile) => {
     const prompt = `
         User Profile:
         Current Role: ${userProfile.currentRole}
+        Target Role: ${userProfile.targetRole || 'Not specified'}
         Skills: ${JSON.stringify(userProfile.skills)}
         Years of Experience: ${userProfile.yearsOfExperience} years
 
         Task: Recommend the top 4 strategic career roles for this user.
+        
+        CRITICAL PRIORITY ORDER & BALANCE:
+        1. Analyze the user's SKILLS (${JSON.stringify(userProfile.skills)}) deeply.
+        2. Provide exactly 2 roles that are stepping stones to the TARGET ROLE (${userProfile.targetRole}).
+        3. Provide exactly 2 roles that are the strongest match for their CURRENT SKILLS and EXPERIENCE (even if different from the target).
         
         Return in strict JSON format with the following structure:
         {
@@ -380,7 +394,24 @@ export const getStudyVelocityInsights = async (courses, weeklyHours) => {
 };
 
 export const getMarketDemandTrends = async (userProfile) => {
-    const prompt = `User Profile: Current Role: ${userProfile.currentRole}, Skills: ${JSON.stringify(userProfile.skills)}, Years of Experience: ${userProfile.yearsOfExperience}. Task: Generate comprehensive market demand trends and insights for this user's skill set. Return in strict JSON format with the following structure: keyMetrics (topSkillGrowth with skill/percentage/trend, averageSkills, activeJobs, jobPostings with count/unit/trend), demandCurve array with month/demand, topGrowthSkills array with name/growth, decliningSkills array with name/decline (negative growth percentage), trendingSkills array with name/category/demand/trend/jobCount/avgSalary/salaryUnit, marketPositioning array with skill/userLevel/marketDemand/gapToDoor/jobCount/avgSalary/salaryUnit.`;
+    const prompt = `User Profile: Current Role: ${userProfile.currentRole}, Skills: ${JSON.stringify(userProfile.skills)}, Years of Experience: ${userProfile.yearsOfExperience}. Task: Generate comprehensive market demand trends and insights for this user's skill set. 
+
+    Return in strict JSON format with the following structure:
+    {
+        "keyMetrics": {
+            "topSkillGrowth": { "skill": string, "percentage": number (0-100), "trend": "up" | "down" },
+            "averageSkills": number,
+            "activeJobs": number,
+            "jobPostings": { "count": number, "unit": string, "trend": "up" | "down" }
+        },
+        "demandCurve": [{"month": string, "demand": number (0-100)}],
+        "topGrowthSkills": [{"name": string, "growth": number (0-100)}],
+        "decliningSkills": [{"name": string, "decline": number (negative percentage, e.g. -15)}],
+        "trendingSkills": [{"name": string, "category": string, "demand": number (0-100), "trend": "hot" | "stable", "jobCount": number, "avgSalary": number, "salaryUnit": string}],
+        "marketPositioning": [{"skill": string, "userLevel": string, "marketDemand": number (0-100), "gapToDoor": number (0-100), "jobCount": number, "avgSalary": number, "salaryUnit": string}]
+    }
+
+    IMPORTANT: All percentage values (growth, demand, marketDemand, gapToDoor) MUST be realistic percentages between 0 and 100. DO NOT exceed 100%.`;
 
     try {
         const chatCompletion = await groq.chat.completions.create({
@@ -388,7 +419,30 @@ export const getMarketDemandTrends = async (userProfile) => {
             model: "llama-3.3-70b-versatile",
             response_format: { type: "json_object" }
         });
-        return JSON.parse(chatCompletion.choices[0].message.content);
+        const data = JSON.parse(chatCompletion.choices[0].message.content);
+
+        // Sanitize percentage values to ensure they are within 0-100 range
+        if (data.keyMetrics?.topSkillGrowth) {
+            data.keyMetrics.topSkillGrowth.percentage = Math.min(Math.max(data.keyMetrics.topSkillGrowth.percentage, 0), 100);
+        }
+        if (data.demandCurve) {
+            data.demandCurve = data.demandCurve.map(d => ({ ...d, demand: Math.min(Math.max(d.demand, 0), 100) }));
+        }
+        if (data.topGrowthSkills) {
+            data.topGrowthSkills = data.topGrowthSkills.map(s => ({ ...s, growth: Math.min(Math.max(s.growth, 0), 100) }));
+        }
+        if (data.trendingSkills) {
+            data.trendingSkills = data.trendingSkills.map(s => ({ ...s, demand: Math.min(Math.max(s.demand, 0), 100) }));
+        }
+        if (data.marketPositioning) {
+            data.marketPositioning = data.marketPositioning.map(p => ({
+                ...p,
+                marketDemand: Math.min(Math.max(p.marketDemand, 0), 100),
+                gapToDoor: Math.min(Math.max(p.gapToDoor, 0), 100)
+            }));
+        }
+
+        return data;
     } catch (error) {
         console.error("Groq API Error in getMarketDemandTrends:", error);
         throw new Error(`AI Service Error: ${error.message}`);
@@ -703,5 +757,34 @@ export const getChatResponse = async (message, history = []) => {
     } catch (error) {
         console.error("Groq Chat Error:", error);
         throw new Error(`Chat AI Error: ${error.message}`);
+    }
+};
+
+export const getAISuggestions = async (type, query) => {
+    const prompt = `
+        Task: Provide 6-8 highly relevant, professional autocompletion suggestions for the category "${type}" based on the partial input: "${query}".
+        
+        Context: These suggestions are for a career trajectory platform "SkillTrajectory".
+        Examples:
+        - If type is "role", return job titles like "Senior Software Engineer", "Product Manager", etc.
+        - If type is "degree", return standard degrees like "Bachelor of Science", "MBA", etc.
+        - If type is "fieldOfStudy", return majors like "Computer Science", "Artificial Intelligence", etc.
+        
+        Return in strict JSON format:
+        {
+            "suggestions": string[]
+        }
+    `;
+
+    try {
+        const chatCompletion = await groq.chat.completions.create({
+            messages: [{ role: "user", content: prompt }],
+            model: "llama-3.1-8b-instant",
+            response_format: { type: "json_object" }
+        });
+        return JSON.parse(chatCompletion.choices[0].message.content);
+    } catch (error) {
+        console.error("Groq Suggestion Error:", error);
+        return { suggestions: [] };
     }
 };

@@ -15,7 +15,8 @@ import {
     getAIJobOpenings,
     getUserDashboardData,
     updateTimelineStatus,
-    getSkillWastageJobs
+    getSkillWastageJobs,
+    getAISuggestions
 } from '../controllers/userController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -40,5 +41,6 @@ router.get('/skill-decay-analysis', protect, getSkillDecayAnalysis);
 router.get('/fairness-metrics', protect, getFairnessMetrics);
 router.post('/job-openings', protect, getAIJobOpenings);
 router.post('/skill-wastage-jobs', protect, getSkillWastageJobs);
+router.get('/suggestions', protect, getAISuggestions);
 
 export default router;

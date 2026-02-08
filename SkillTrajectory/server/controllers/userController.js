@@ -24,6 +24,7 @@ export const updateProfile = async (req, res) => {
             user.profile.phone = req.body.phone || user.profile.phone;
             user.profile.bio = req.body.bio || user.profile.bio;
             user.profile.currentRole = req.body.currentRole || user.profile.currentRole;
+            user.profile.targetRole = req.body.targetRole || user.profile.targetRole;
             user.profile.location = req.body.location || user.profile.location;
             user.profile.yearsOfExperience = req.body.yearsOfExperience || user.profile.yearsOfExperience;
 
@@ -332,6 +333,18 @@ export const getSkillWastageJobs = async (req, res) => {
         user.profile.points += 15; // High value for social impact
         await user.save();
         res.json(wastageJobs);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const getAISuggestions = async (req, res) => {
+    try {
+        const { type, query } = req.query;
+        if (!type || !query) return res.status(400).json({ message: 'Type and query are required' });
+
+        const suggestions = await aiService.getAISuggestions(type, query);
+        res.json(suggestions);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

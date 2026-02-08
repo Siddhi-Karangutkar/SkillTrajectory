@@ -42,11 +42,11 @@ const SkillLevels = () => {
     };
 
     const getColorForScore = (score) => {
-        if (score >= 90) return '#6A5AE0'; // Expert (Purple)
-        if (score >= 75) return '#28A745'; // Advanced (Green)
-        if (score >= 50) return '#007BFF'; // Intermediate (Blue)
-        if (score >= 25) return '#FFC107'; // Learning (Yellow)
-        return '#FF5A79'; // Beginner (Pink)
+        if (score >= 90) return '#6A5AE0';
+        if (score >= 75) return '#28A745';
+        if (score >= 50) return '#007BFF';
+        if (score >= 25) return '#FFC107';
+        return '#FF5A79';
     };
 
     const handleScoreChange = (skillName, newScore) => {
@@ -97,34 +97,64 @@ const SkillLevels = () => {
     }
 
     return (
-        <div className="auth-container" style={{ minHeight: '100vh', height: 'auto', padding: '120px 20px', background: '#F8F9FB' }}>
-            <div className="auth-card" style={{ maxWidth: '1100px', width: '100%', background: '#FFF', padding: '3.5rem', borderRadius: '40px' }}>
+        <div style={{ minHeight: '100vh', background: '#F8F9FB', paddingBottom: '120px' }}>
+            {/* Hero Section */}
+            <div style={{
+                background: '#FFF5F0',
+                padding: '120px 20px 100px 20px',
+                textAlign: 'center',
+                color: '#1A1A1A',
+                position: 'relative',
+                borderBottom: '1px solid #FFE0D1'
+            }}>
+                <div style={{
+                    display: 'inline-block',
+                    padding: '8px 24px',
+                    borderRadius: '50px',
+                    border: '1px solid #FFE0D1',
+                    background: '#FFF',
+                    fontSize: '0.75rem',
+                    fontWeight: '800',
+                    letterSpacing: '2px',
+                    textTransform: 'uppercase',
+                    marginBottom: '2rem',
+                    color: '#FF6E14'
+                }}>
+                    ASSESSMENT
+                </div>
+                <h1 style={{ fontSize: '4.5rem', fontWeight: '950', marginBottom: '1.5rem', letterSpacing: '-3px', color: '#1A1A1A' }}>Define Your Proficiency</h1>
+                <p style={{ fontSize: '1.25rem', color: '#666', maxWidth: '700px', margin: '0 auto', lineHeight: '1.6' }}>
+                    Calibrate your skills to receive hyper-personalized career and learning trajectories based on live market analysis.
+                </p>
+            </div>
+
+            <div style={{ maxWidth: '1400px', width: '95%', margin: '-50px auto 0 auto', position: 'relative', zIndex: 10 }}>
 
                 {/* Overall Proficiency Card */}
                 <div style={{
-                    border: `1px solid ${getColorForScore(overallScore)}`,
-                    borderRadius: '24px',
-                    padding: '2.5rem 3.5rem',
+                    borderRadius: '32px',
+                    padding: '3.5rem',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     marginBottom: '3rem',
                     background: '#FFF',
-                    boxShadow: `0 4px 20px ${getColorForScore(overallScore)}15`
+                    border: '1px solid #F0F0F0',
+                    boxShadow: '0 10px 40px rgba(0,0,0,0.03)'
                 }}>
                     <div>
-                        <h2 style={{ fontSize: '2rem', fontWeight: '900', margin: '0 0 10px 0', color: '#1A1A1A' }}>Overall Proficiency</h2>
-                        <p style={{ color: '#666', margin: 0, fontSize: '1rem' }}>Aggregate matching score based on current market standards.</p>
+                        <h2 style={{ fontSize: '2.5rem', fontWeight: '950', margin: '0 0 10px 0', color: '#1A1A1A', letterSpacing: '-1px' }}>Overall Proficiency</h2>
+                        <p style={{ color: '#666', margin: 0, fontSize: '1.1rem' }}>Aggregate matching score based on current market standards.</p>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '25px' }}>
-                        <span style={{ fontSize: '4.5rem', fontWeight: '950', color: getColorForScore(overallScore), letterSpacing: '-2px' }}>{overallScore}%</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '35px' }}>
+                        <span style={{ fontSize: '5.5rem', fontWeight: '950', color: getColorForScore(overallScore), letterSpacing: '-3px' }}>{overallScore}%</span>
                         <div style={{
                             background: `${getColorForScore(overallScore)}15`,
                             color: getColorForScore(overallScore),
-                            padding: '12px 24px',
-                            borderRadius: '12px',
-                            fontSize: '1rem',
-                            fontWeight: '900',
+                            padding: '16px 32px',
+                            borderRadius: '16px',
+                            fontSize: '1.1rem',
+                            fontWeight: '950',
                             textTransform: 'uppercase',
                             letterSpacing: '1px'
                         }}>
@@ -133,124 +163,139 @@ const SkillLevels = () => {
                     </div>
                 </div>
 
-                {/* Proficiency Guide */}
-                <div style={{ background: '#FFF', borderRadius: '32px', padding: '3rem', border: '1px solid #F0F0F0', boxShadow: '0 10px 40px rgba(0,0,0,0.03)', marginBottom: '3.5rem' }}>
-                    <h3 style={{ fontSize: '1.25rem', fontWeight: '900', margin: '0 0 2.5rem 0', color: '#1A1A1A' }}>Proficiency Guide legend</h3>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '30px' }}>
-                        {GUIDE.map(item => (
-                            <div key={item.id} style={{ textAlign: 'center', flex: 1, minWidth: '100px' }}>
-                                <div style={{
-                                    background: item.color,
-                                    color: '#FFF',
-                                    padding: '8px 20px',
-                                    borderRadius: '50px',
-                                    fontSize: '0.85rem',
-                                    fontWeight: '800',
-                                    marginBottom: '15px',
-                                    display: 'inline-block',
-                                    boxShadow: `0 4px 15px ${item.color}40`
-                                }}>
-                                    {item.range}
+                {/* Proficiency Guide & Cards Container */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 3fr', gap: '2.5rem' }}>
+
+                    {/* Sidebar: Proficiency Guide */}
+                    <div style={{
+                        background: '#FFF',
+                        borderRadius: '32px',
+                        padding: '2.5rem',
+                        border: '1px solid #F0F0F0',
+                        boxShadow: '0 10px 40px rgba(0,0,0,0.03)',
+                        height: 'fit-content',
+                        position: 'sticky',
+                        top: '120px'
+                    }}>
+                        <h3 style={{ fontSize: '1.1rem', fontWeight: '900', margin: '0 0 2rem 0', color: '#1A1A1A' }}>Mastery Scale</h3>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                            {GUIDE.map(item => (
+                                <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                    <div style={{
+                                        width: '60px',
+                                        background: item.color,
+                                        color: '#FFF',
+                                        padding: '6px 0',
+                                        textAlign: 'center',
+                                        borderRadius: '8px',
+                                        fontSize: '0.75rem',
+                                        fontWeight: '800'
+                                    }}>
+                                        {item.range}
+                                    </div>
+                                    <div style={{ fontSize: '0.95rem', color: '#1A1A1A', fontWeight: '700' }}>{item.label}</div>
                                 </div>
-                                <div style={{ fontSize: '1rem', color: '#1A1A1A', fontWeight: '700' }}>{item.label}</div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Skill Cards Grid - 3 per row */}
+                    <div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginBottom: '4rem' }}>
+                            {skillList.map((skill, idx) => {
+                                const scoreColor = getColorForScore(skill.score);
+                                return (
+                                    <div key={idx} style={{ background: '#FFF', borderRadius: '24px', padding: '2rem', border: '1px solid #F0F0F0', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                                            <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '900', color: '#1A1A1A', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{skill.name}</h4>
+                                            <div style={{
+                                                background: `${scoreColor}10`,
+                                                color: scoreColor,
+                                                padding: '6px 14px',
+                                                borderRadius: '8px',
+                                                fontSize: '0.7rem',
+                                                fontWeight: '900',
+                                                textTransform: 'uppercase'
+                                            }}>
+                                                {skill.level}
+                                            </div>
+                                        </div>
+
+                                        <div style={{ position: 'relative', height: '60px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                                            <input
+                                                type="range"
+                                                min="0"
+                                                max="100"
+                                                value={skill.score}
+                                                onChange={(e) => handleScoreChange(skill.name, e.target.value)}
+                                                className="prof-slider"
+                                                style={{
+                                                    width: '100%',
+                                                    background: `linear-gradient(to right, ${scoreColor} 0%, ${scoreColor} ${skill.score}%, #F3F4F6 ${skill.score}%, #F3F4F6 100%)`
+                                                }}
+                                            />
+                                            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '15px' }}>
+                                                <span style={{ fontSize: '1.2rem', fontWeight: '950', color: scoreColor }}>{skill.score}%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        {/* Actions */}
+                        <div style={{ display: 'flex', gap: '1.5rem', borderTop: '1px solid #EEE', paddingTop: '3.5rem' }}>
+                            <button onClick={handleSave} className="auth-button" disabled={loading} style={{
+                                flex: 2, margin: 0, height: '72px', fontSize: '1.2rem', borderRadius: '20px',
+                                display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '15px'
+                            }}>
+                                {loading ? (
+                                    <>
+                                        <div className="loader" style={{ width: '20px', height: '20px', border: '2px solid #FFF', borderTop: '2px solid transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+                                        Saving Your Journey...
+                                    </>
+                                ) : 'Save proficiency & Complete →'}
+                            </button>
+                            <button onClick={() => navigate('/profile/edit-skills')} className="btn btn-outline" style={{ flex: 1, borderRadius: '20px', fontWeight: '800', border: '2px solid #EEE', height: '72px' }}>
+                                Back
+                            </button>
+                        </div>
+
+                        {error && <div className="error-message" style={{ marginTop: '2rem', textAlign: 'center' }}>{error}</div>}
+
+                        <AnimatePresence>
+                            {success && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0 }}
+                                    className="success-message"
+                                    style={{
+                                        background: 'rgba(52, 211, 153, 0.1)',
+                                        color: '#059669',
+                                        padding: '1.5rem',
+                                        borderRadius: '20px',
+                                        marginTop: '2rem',
+                                        border: '1px solid rgba(52, 211, 153, 0.2)',
+                                        textAlign: 'center',
+                                        fontWeight: '800',
+                                        fontSize: '1.1rem'
+                                    }}
+                                >
+                                    {success}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
                 </div>
 
-                {/* Skill Cards Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '2.5rem', marginBottom: '4rem' }}>
-                    {skillList.map((skill, idx) => {
-                        const scoreColor = getColorForScore(skill.score);
-                        return (
-                            <div key={idx} style={{ background: '#FFF', borderRadius: '28px', padding: '2.5rem', border: '1px solid #F0F0F0', boxShadow: '0 4px 30px rgba(0,0,0,0.03)' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
-                                    <h4 style={{ margin: 0, fontSize: '1.35rem', fontWeight: '900', color: '#1A1A1A' }}>{skill.name}</h4>
-                                    <div style={{
-                                        background: `${scoreColor}15`,
-                                        color: scoreColor,
-                                        padding: '8px 18px',
-                                        borderRadius: '10px',
-                                        fontSize: '0.85rem',
-                                        fontWeight: '900',
-                                        textTransform: 'uppercase'
-                                    }}>
-                                        {skill.level}
-                                    </div>
-                                </div>
-
-                                <div style={{ position: 'relative', height: '100px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                                    <input
-                                        type="range"
-                                        min="0"
-                                        max="100"
-                                        value={skill.score}
-                                        onChange={(e) => handleScoreChange(skill.name, e.target.value)}
-                                        className="prof-slider"
-                                        style={{
-                                            width: '100%',
-                                            background: `linear-gradient(to right, ${scoreColor} 0%, ${scoreColor} ${skill.score}%, #F3F4F6 ${skill.score}%, #F3F4F6 100%)`
-                                        }}
-                                    />
-                                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '30px' }}>
-                                        <span style={{ fontSize: '1.4rem', fontWeight: '950', color: scoreColor }}>{skill.score}%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-
-                {/* Actions */}
-                <div style={{ display: 'flex', gap: '1.5rem', borderTop: '1px solid #EEE', paddingTop: '3.5rem' }}>
-                    <button onClick={handleSave} className="auth-button" disabled={loading} style={{
-                        flex: 2, margin: 0, height: '72px', fontSize: '1.2rem', borderRadius: '20px',
-                        display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '15px'
-                    }}>
-                        {loading ? (
-                            <>
-                                <div className="loader" style={{ width: '20px', height: '20px', border: '2px solid #FFF', borderTop: '2px solid transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
-                                Saving Your Journey...
-                            </>
-                        ) : 'Save proficiency & Complete →'}
-                    </button>
-                    <button onClick={() => navigate('/profile/edit-skills')} className="btn btn-outline" style={{ flex: 1, borderRadius: '20px', fontWeight: '800', border: '2px solid #EEE', height: '72px' }}>
-                        Back
-                    </button>
-                </div>
-
-                {error && <div className="error-message" style={{ marginTop: '2rem', textAlign: 'center' }}>{error}</div>}
-
-                <AnimatePresence>
-                    {success && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0 }}
-                            className="success-message"
-                            style={{
-                                background: 'rgba(52, 211, 153, 0.1)',
-                                color: '#059669',
-                                padding: '1.5rem',
-                                borderRadius: '20px',
-                                marginTop: '2rem',
-                                border: '1px solid rgba(52, 211, 153, 0.2)',
-                                textAlign: 'center',
-                                fontWeight: '800',
-                                fontSize: '1.1rem'
-                            }}
-                        >
-                            {success}
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                <style>{`
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                `}</style>
             </div>
-            <style>{`
-                @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
-            `}</style>
         </div>
     );
 };

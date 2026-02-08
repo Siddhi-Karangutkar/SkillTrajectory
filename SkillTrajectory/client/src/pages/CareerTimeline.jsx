@@ -62,6 +62,10 @@ const CareerTimeline = () => {
                 status: i === 0 ? 'CURRENT' : 'UPCOMING',
                 description: phase.description || 'Focusing on strategic skills for the next level.',
                 skills: phase.skills || [],
+                tools: phase.tools || [],
+                certificationTargets: phase.certificationTargets || [],
+                keyProjects: phase.keyProjects || [],
+                softSkillsFocus: phase.softSkillsFocus || [],
                 duration: phase.duration || 'Flexible'
             }));
 
@@ -273,53 +277,104 @@ const CareerTimeline = () => {
                                         {node.description}
                                     </p>
 
-                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '25px' }}>
-                                        {node.skills && node.skills.map((skill, si) => (
-                                            <span key={si} style={{
-                                                background: '#F8F9FB',
-                                                color: '#1A1A1A',
-                                                padding: '8px 16px',
-                                                borderRadius: '12px',
-                                                fontSize: '0.9rem',
-                                                fontWeight: '800',
-                                                border: '1px solid #EEE'
-                                            }}>
-                                                {skill}
-                                            </span>
-                                        ))}
+                                    {/* Skills Section */}
+                                    <div style={{ marginBottom: '25px' }}>
+                                        <h5 style={{ fontSize: '0.85rem', fontWeight: '800', color: '#828282', textTransform: 'uppercase', marginBottom: '10px' }}>Key Skills</h5>
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                                            {node.skills && node.skills.map((skill, si) => (
+                                                <span key={si} style={{
+                                                    background: '#F8F9FB',
+                                                    color: '#1A1A1A',
+                                                    padding: '8px 16px',
+                                                    borderRadius: '12px',
+                                                    fontSize: '0.9rem',
+                                                    fontWeight: '800',
+                                                    border: '1px solid #EEE'
+                                                }}>
+                                                    {skill}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Detailed Breakdown Grid */}
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '25px' }}>
+                                        {(node.tools && node.tools.length > 0) && (
+                                            <div style={{ background: '#FFF5F0', padding: '15px', borderRadius: '16px', border: '1px solid #FFE0CC' }}>
+                                                <h5 style={{ fontSize: '0.8rem', fontWeight: '800', color: '#FF6E14', textTransform: 'uppercase', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                    <span>🛠️</span> Tools to Master
+                                                </h5>
+                                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                                    {node.tools.map((t, i) => (
+                                                        <span key={i} style={{ fontSize: '0.85rem', fontWeight: '700', color: '#1A1A1A' }}>{t}{i < node.tools.length - 1 ? ',' : ''}</span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {(node.certificationTargets && node.certificationTargets.length > 0) && (
+                                            <div style={{ background: '#F0F9FF', padding: '15px', borderRadius: '16px', border: '1px solid #E0F2FE' }}>
+                                                <h5 style={{ fontSize: '0.8rem', fontWeight: '800', color: '#0EA5E9', textTransform: 'uppercase', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                    <span>📜</span> Target Certs
+                                                </h5>
+                                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                                    {node.certificationTargets.map((c, i) => (
+                                                        <span key={i} style={{ fontSize: '0.85rem', fontWeight: '700', color: '#1A1A1A' }}>{c}</span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {(node.keyProjects && node.keyProjects.length > 0) && (
+                                            <div style={{ gridColumn: 'span 2', background: '#F0FDF4', padding: '15px', borderRadius: '16px', border: '1px solid #DCFCE7' }}>
+                                                <h5 style={{ fontSize: '0.8rem', fontWeight: '800', color: '#16A34A', textTransform: 'uppercase', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                    <span>💡</span> Portfolio Project
+                                                </h5>
+                                                <p style={{ margin: 0, fontSize: '0.9rem', color: '#1A1A1A', lineHeight: '1.5' }}>
+                                                    {node.keyProjects[0]}
+                                                </p>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* Action Buttons */}
                                     <div style={{ display: 'flex', gap: '12px', paddingTop: '20px', borderTop: '1px solid #F0F0F0' }}>
-                                        {node.status !== 'COMPLETED' ? (
+                                        {/* Logic: Only show as COMPLETED if it is actually COMPLETED AND the previous one is also COMPLETED (or it's the first one) */}
+                                        {(node.status !== 'COMPLETED' || (index > 0 && timelineNodes[index - 1].status !== 'COMPLETED')) ? (
                                             <>
                                                 <button
                                                     onClick={() => handleUpdateNodeStatus(index, 'COMPLETED')}
+                                                    disabled={index > 0 && timelineNodes[index - 1].status !== 'COMPLETED'}
                                                     style={{
                                                         padding: '10px 20px',
                                                         borderRadius: '10px',
-                                                        background: '#10B981',
-                                                        color: '#FFF',
+                                                        background: (index > 0 && timelineNodes[index - 1].status !== 'COMPLETED') ? '#E5E7EB' : '#10B981',
+                                                        color: (index > 0 && timelineNodes[index - 1].status !== 'COMPLETED') ? '#A3A3A3' : '#FFF',
                                                         border: 'none',
                                                         fontWeight: '700',
                                                         fontSize: '0.9rem',
-                                                        cursor: 'pointer'
+                                                        cursor: (index > 0 && timelineNodes[index - 1].status !== 'COMPLETED') ? 'not-allowed' : 'pointer',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '6px'
                                                     }}
                                                 >
+                                                    {(index > 0 && timelineNodes[index - 1].status !== 'COMPLETED') && <span>🔒</span>}
                                                     Mark as Complete (+100 XP)
                                                 </button>
                                                 {node.status !== 'CURRENT' && (
                                                     <button
                                                         onClick={() => handleUpdateNodeStatus(index, 'CURRENT')}
+                                                        disabled={index > 0 && timelineNodes[index - 1].status !== 'COMPLETED'}
                                                         style={{
                                                             padding: '10px 20px',
                                                             borderRadius: '10px',
                                                             background: '#FFF',
-                                                            color: '#FF6E14',
-                                                            border: '2px solid #FF6E14',
+                                                            color: (index > 0 && timelineNodes[index - 1].status !== 'COMPLETED') ? '#A3A3A3' : '#FF6E14',
+                                                            border: (index > 0 && timelineNodes[index - 1].status !== 'COMPLETED') ? '2px solid #E5E7EB' : '2px solid #FF6E14',
                                                             fontWeight: '700',
                                                             fontSize: '0.9rem',
-                                                            cursor: 'pointer'
+                                                            cursor: (index > 0 && timelineNodes[index - 1].status !== 'COMPLETED') ? 'not-allowed' : 'pointer'
                                                         }}
                                                     >
                                                         Set as Current

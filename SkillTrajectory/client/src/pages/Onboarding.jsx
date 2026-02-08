@@ -17,11 +17,12 @@ const Onboarding = () => {
         phone: '',
         bio: '',
         currentRole: '',
+        targetRole: '',
         location: '',
         education: [{ school: '', degree: '', fieldOfStudy: '', startYear: '', endYear: '' }],
         experience: [{ company: '', position: '', location: '', startDate: '', endDate: '', description: '' }],
         projects: [{ title: '', description: '', link: '' }],
-        skills: [],
+        skills: { technical: [], soft: [] },
         interests: [],
         constraints: { preferredLocation: '', availableTime: '', incomeNeeds: '' }
     });
@@ -36,11 +37,12 @@ const Onboarding = () => {
                 phone: user.profile.phone || '',
                 bio: user.profile.bio || '',
                 currentRole: user.profile.currentRole || '',
+                targetRole: user.profile.targetRole || '',
                 location: user.profile.location || '',
                 education: user.profile.education?.length > 0 ? user.profile.education : [{ school: '', degree: '', fieldOfStudy: '', startYear: '', endYear: '' }],
                 experience: user.profile.experience?.length > 0 ? user.profile.experience : [{ company: '', position: '', location: '', startDate: '', endDate: '', description: '' }],
                 projects: user.profile.projects?.length > 0 ? user.profile.projects : [{ title: '', description: '', link: '' }],
-                skills: user.profile.skills || [],
+                skills: user.profile.skills?.technical ? user.profile.skills : { technical: user.profile.skills || [], soft: [] },
                 interests: user.profile.interests || [],
                 constraints: user.profile.constraints || { preferredLocation: '', availableTime: '', incomeNeeds: '' }
             });
@@ -49,6 +51,7 @@ const Onboarding = () => {
     }, [user, isInitialized]);
 
     const [newSkill, setNewSkill] = useState('');
+    const [skillType, setSkillType] = useState('technical');
     const [suggestions, setSuggestions] = useState({ type: '', list: [] });
     const [showSuggestions, setShowSuggestions] = useState({ section: '', index: null, field: '' });
 
@@ -170,6 +173,20 @@ const Onboarding = () => {
         }
     };
 
+    const fetchAISuggestions = async (type, query) => {
+        if (!query || query.length < 2) return;
+        try {
+            const token = user?.token;
+            const response = await fetch(`http://localhost:5000/api/users/suggestions?type=${type}&query=${encodeURIComponent(query)}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await response.json();
+            setSuggestions({ type, list: data.suggestions || [] });
+        } catch (err) {
+            console.error('AI Suggestion fetch error:', err);
+        }
+    };
+
     const nextStep = () => setStep(s => Math.min(s + 1, 5));
     const prevStep = () => setStep(s => Math.max(s - 1, 1));
 
@@ -182,16 +199,13 @@ const Onboarding = () => {
 
             // Handle suggestions for nested fields
             if (name === 'degree') {
-                const filtered = DEGREES.filter(d => d.toLowerCase().includes(value.toLowerCase()));
-                setSuggestions({ type: 'degree', list: filtered });
+                fetchAISuggestions('degree', value);
                 setShowSuggestions({ section, index, field: name });
             } else if (name === 'fieldOfStudy') {
-                const filtered = FIELDS_OF_STUDY.filter(f => f.toLowerCase().includes(value.toLowerCase()));
-                setSuggestions({ type: 'fieldOfStudy', list: filtered });
+                fetchAISuggestions('fieldOfStudy', value);
                 setShowSuggestions({ section, index, field: name });
             } else if (name === 'position') {
-                const filtered = POSITIONS.filter(p => p.toLowerCase().includes(value.toLowerCase()));
-                setSuggestions({ type: 'position', list: filtered });
+                fetchAISuggestions('role', value);
                 setShowSuggestions({ section, index, field: name });
             } else if (name === 'school') {
                 fetchUniversities(value);
@@ -205,9 +219,8 @@ const Onboarding = () => {
             }
         } else {
             setFormData({ ...formData, [name]: value });
-            if (name === 'currentRole') {
-                const filtered = POSITIONS.filter(p => p.toLowerCase().includes(value.toLowerCase()));
-                setSuggestions({ type: 'position', list: filtered });
+            if (name === 'currentRole' || name === 'targetRole') {
+                fetchAISuggestions('role', value);
                 setShowSuggestions({ section: null, index: null, field: name });
             }
         }
@@ -237,21 +250,38 @@ const Onboarding = () => {
 
     const handleAddSkill = (e) => {
         e.preventDefault();
-        if (newSkill.trim() && !formData.skills.some(s => s.name === newSkill.trim())) {
-            setFormData({ ...formData, skills: [...formData.skills, { name: newSkill.trim(), category: 'technical' }] });
-            setNewSkill('');
+        if (newSkill.trim()) {
+            const type = skillType; // 'technical' or 'soft'
+            if (!formData.skills[type].some(s => s.name === newSkill.trim())) {
+                setFormData({
+                    ...formData,
+                    skills: {
+                        ...formData.skills,
+                        [type]: [...formData.skills[type], { name: newSkill.trim(), category: type === 'technical' ? 'technical' : 'soft' }]
+                    }
+                });
+                setNewSkill('');
+            }
         }
     };
 
-    const removeSkill = (skillName) => {
-        setFormData({ ...formData, skills: formData.skills.filter(s => s.name !== skillName) });
+    const removeSkill = (skillName, category) => {
+        const type = category === 'soft' ? 'soft' : 'technical';
+        setFormData({
+            ...formData,
+            skills: {
+                ...formData.skills,
+                [type]: formData.skills[type].filter(s => s.name !== skillName)
+            }
+        });
     };
 
     const handleSubmit = async () => {
         setLoading(true);
         setError('');
         try {
-            await updateProfile({ ...formData, isOnboardingComplete: true });
+            const flatSkills = [...formData.skills.technical, ...formData.skills.soft];
+            await updateProfile({ ...formData, skills: flatSkills, isOnboardingComplete: true });
             navigate('/');
         } catch (err) {
             setError(err);
@@ -300,7 +330,7 @@ const Onboarding = () => {
                 />
             </div>
             <div className="form-group" style={{ position: 'relative' }}>
-                <label>Current Role</label>
+                <label>Current Role (What do you do now?)</label>
                 <div className="dropdown-wrapper">
                     <input
                         type="text"
@@ -308,10 +338,9 @@ const Onboarding = () => {
                         value={formData.currentRole}
                         onChange={handleInputChange}
                         onFocus={() => {
-                            setSuggestions({ type: 'position', list: POSITIONS });
                             setShowSuggestions({ section: null, index: null, field: 'currentRole' });
                         }}
-                        placeholder="e.g. Senior Product Designer"
+                        placeholder="e.g. Frontend Developer"
                         autoComplete="off"
                         style={{ paddingRight: '40px' }}
                     />
@@ -320,6 +349,30 @@ const Onboarding = () => {
                     <div className="suggestions-list">
                         {suggestions.list.map((item, i) => (
                             <div key={i} className="suggestion-item" onClick={() => selectSuggestion(item, null, null, 'currentRole')}>{item}</div>
+                        ))}
+                    </div>
+                )}
+            </div>
+            <div className="form-group" style={{ position: 'relative' }}>
+                <label>Target Role (Where do you want to be?)</label>
+                <div className="dropdown-wrapper">
+                    <input
+                        type="text"
+                        name="targetRole"
+                        value={formData.targetRole}
+                        onChange={handleInputChange}
+                        onFocus={() => {
+                            setShowSuggestions({ section: null, index: null, field: 'targetRole' });
+                        }}
+                        placeholder="e.g. AI Solution Architect"
+                        autoComplete="off"
+                        style={{ paddingRight: '40px' }}
+                    />
+                </div>
+                {!showSuggestions.section && showSuggestions.field === 'targetRole' && suggestions.list.length > 0 && (
+                    <div className="suggestions-list">
+                        {suggestions.list.map((item, i) => (
+                            <div key={i} className="suggestion-item" onClick={() => selectSuggestion(item, null, null, 'targetRole')}>{item}</div>
                         ))}
                     </div>
                 )}
@@ -464,10 +517,17 @@ const Onboarding = () => {
     ];
 
     const toggleSuggestedSkill = (skillName, category = 'technical') => {
-        if (formData.skills.some(s => s.name === skillName)) {
-            removeSkill(skillName);
+        const type = category === 'soft' ? 'soft' : 'technical';
+        if (formData.skills[type].some(s => s.name === skillName)) {
+            removeSkill(skillName, category);
         } else {
-            setFormData({ ...formData, skills: [...formData.skills, { name: skillName, category }] });
+            setFormData({
+                ...formData,
+                skills: {
+                    ...formData.skills,
+                    [type]: [...formData.skills[type], { name: skillName, category }]
+                }
+            });
         }
     };
 
@@ -491,14 +551,29 @@ const Onboarding = () => {
                 </div>
                 <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '2rem' }}>Let's categorize your expertise for better trajectory modeling.</p>
 
-                <form onSubmit={handleAddSkill} style={{ display: 'flex', gap: '10px', marginBottom: '2rem' }}>
+                <form onSubmit={handleAddSkill} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 120px', gap: '10px', marginBottom: '2rem' }}>
                     <input
                         type="text"
                         value={newSkill}
                         onChange={(e) => setNewSkill(e.target.value)}
                         placeholder="Add a custom skill (e.g. System Design)"
+                        style={{ marginBottom: 0 }}
                     />
-                    <button type="submit" className="auth-button" style={{ marginTop: 0, width: '120px' }}>Add</button>
+                    <select
+                        onChange={(e) => setSkillType(e.target.value)}
+                        value={skillType}
+                        style={{
+                            padding: '0 1rem',
+                            borderRadius: '12px',
+                            border: '1px solid #E0E0E0',
+                            background: '#F7F8FA',
+                            fontSize: '0.9rem'
+                        }}
+                    >
+                        <option value="technical">Macro (Technical)</option>
+                        <option value="soft">Micro (Soft Skill)</option>
+                    </select>
+                    <button type="submit" className="auth-button" style={{ marginTop: 0, width: '100%' }}>Add</button>
                 </form>
 
                 <div className="skills-section" style={{ marginBottom: '2rem' }}>
@@ -513,14 +588,14 @@ const Onboarding = () => {
                                     borderRadius: '20px',
                                     fontSize: '0.85rem',
                                     border: '1px solid',
-                                    borderColor: formData.skills.some(s => s.name === skill) ? '#FF6E14' : '#E0E0E0',
-                                    background: formData.skills.some(s => s.name === skill) ? 'rgba(255, 110, 20, 0.1)' : '#FFF',
-                                    color: formData.skills.some(s => s.name === skill) ? '#FF6E14' : '#666',
+                                    borderColor: formData.skills.technical.some(s => s.name === skill) ? '#FF6E14' : '#E0E0E0',
+                                    background: formData.skills.technical.some(s => s.name === skill) ? 'rgba(255, 110, 20, 0.1)' : '#FFF',
+                                    color: formData.skills.technical.some(s => s.name === skill) ? '#FF6E14' : '#666',
                                     transition: 'all 0.2s ease',
                                     cursor: 'pointer'
                                 }}
                             >
-                                {formData.skills.some(s => s.name === skill) ? '✓ ' : '+ '}{skill}
+                                {formData.skills.technical.some(s => s.name === skill) ? '✓ ' : '+ '}{skill}
                             </button>
                         ))}
                     </div>
@@ -538,41 +613,43 @@ const Onboarding = () => {
                                     borderRadius: '20px',
                                     fontSize: '0.85rem',
                                     border: '1px solid',
-                                    borderColor: formData.skills.some(s => s.name === skill) ? '#FF6E14' : '#E0E0E0',
-                                    background: formData.skills.some(s => s.name === skill) ? 'rgba(255, 110, 20, 0.1)' : '#FFF',
-                                    color: formData.skills.some(s => s.name === skill) ? '#FF6E14' : '#666',
+                                    borderColor: formData.skills.soft.some(s => s.name === skill) ? '#FF6E14' : '#E0E0E0',
+                                    background: formData.skills.soft.some(s => s.name === skill) ? 'rgba(255, 110, 20, 0.1)' : '#FFF',
+                                    color: formData.skills.soft.some(s => s.name === skill) ? '#FF6E14' : '#666',
                                     transition: 'all 0.2s ease',
                                     cursor: 'pointer'
                                 }}
                             >
-                                {formData.skills.some(s => s.name === skill) ? '✓ ' : '+ '}{skill}
+                                {formData.skills.soft.some(s => s.name === skill) ? '✓ ' : '+ '}{skill}
                             </button>
                         ))}
                     </div>
                 </div>
 
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '1rem', minHeight: '80px', padding: '1.5rem', border: '2px dashed #F0F0F0', borderRadius: '16px' }}>
-                    {formData.skills.length > 0 ? formData.skills.map((skill, index) => (
-                        <motion.div
-                            key={index}
-                            initial={{ scale: 0.8 }}
-                            animate={{ scale: 1 }}
-                            className="skill-chip"
-                            style={{
-                                background: skill.category === 'soft' ? '#FF5A79' : '#FF6E14',
-                                color: '#FFF',
-                                padding: '8px 16px',
-                                borderRadius: '25px',
-                                fontSize: '0.9rem',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '8px'
-                            }}
-                        >
-                            {skill.name}
-                            <span onClick={() => removeSkill(skill.name)} style={{ cursor: 'pointer', fontWeight: 'bold' }}>×</span>
-                        </motion.div>
-                    )) : (
+                    {[...formData.skills.technical, ...formData.skills.soft].length > 0 ? (
+                        [...formData.skills.technical, ...formData.skills.soft].map((skill, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ scale: 0.8 }}
+                                animate={{ scale: 1 }}
+                                className="skill-chip"
+                                style={{
+                                    background: skill.category === 'soft' ? '#FF5A79' : '#FF6E14',
+                                    color: '#FFF',
+                                    padding: '8px 16px',
+                                    borderRadius: '25px',
+                                    fontSize: '0.9rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px'
+                                }}
+                            >
+                                {skill.name}
+                                <span onClick={() => removeSkill(skill.name, skill.category)} style={{ cursor: 'pointer', fontWeight: 'bold' }}>×</span>
+                            </motion.div>
+                        ))
+                    ) : (
                         <div style={{ color: '#CCC', width: '100%', textAlign: 'center', alignSelf: 'center' }}>Selected skills will appear here</div>
                     )}
                 </div>

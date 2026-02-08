@@ -128,7 +128,13 @@ const SectorTransitions = () => {
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                                         <span style={{ fontSize: '2rem' }}>{sector.icon || '🚀'}</span>
-                                        <h2 style={{ fontSize: '1.75rem', fontWeight: '900', color: '#1A1A1A', margin: 0 }}>{sector.name}</h2>
+                                        <div>
+                                            <h2 style={{ fontSize: '1.75rem', fontWeight: '900', color: '#1A1A1A', margin: 0 }}>{sector.name}</h2>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
+                                                <div style={{ width: '8px', height: '8px', background: '#22C55E', borderRadius: '50%', boxShadow: '0 0 0 2px rgba(34, 197, 94, 0.2)' }}></div>
+                                                <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#22C55E', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Live Market Data</span>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div style={{
                                         background: '#FF6E14',
@@ -158,16 +164,22 @@ const SectorTransitions = () => {
                                     border: '1px solid #F0F0F0'
                                 }}>
                                     <div>
-                                        <div style={{ fontSize: '0.75rem', fontWeight: '800', color: '#828282', textTransform: 'uppercase', marginBottom: '8px' }}>Difficulty</div>
-                                        <div style={{ fontSize: '1.25rem', fontWeight: '900', color: '#FF6E14' }}>{sector.difficulty}</div>
+                                        <div style={{ fontSize: '0.75rem', fontWeight: '800', color: '#828282', textTransform: 'uppercase', marginBottom: '8px' }}>Active Listings</div>
+                                        <div style={{ fontSize: '1.25rem', fontWeight: '900', color: '#1A1A1A' }}>{sector.activeJobs ? sector.activeJobs.toLocaleString() : '850+'}</div>
                                     </div>
                                     <div>
-                                        <div style={{ fontSize: '0.75rem', fontWeight: '800', color: '#828282', textTransform: 'uppercase', marginBottom: '8px' }}>Success Rate</div>
-                                        <div style={{ fontSize: '1.25rem', fontWeight: '900', color: '#1A1A1A' }}>{sector.successRate || '75%'}</div>
+                                        <div style={{ fontSize: '0.75rem', fontWeight: '800', color: '#828282', textTransform: 'uppercase', marginBottom: '8px' }}>Growth (YoY)</div>
+                                        <div style={{ fontSize: '1.25rem', fontWeight: '900', color: '#10B981' }}>{sector.growthTrend || '+12%'}</div>
                                     </div>
                                     <div>
-                                        <div style={{ fontSize: '0.75rem', fontWeight: '800', color: '#828282', textTransform: 'uppercase', marginBottom: '8px' }}>Expected Upside</div>
-                                        <div style={{ fontSize: '1.25rem', fontWeight: '900', color: '#10B981' }}>{sector.expectedUpside || sector.salaryUpside || '+15%'}</div>
+                                        <div style={{ fontSize: '0.75rem', fontWeight: '800', color: '#828282', textTransform: 'uppercase', marginBottom: '8px' }}>Velocity</div>
+                                        <div style={{
+                                            fontSize: '1.25rem',
+                                            fontWeight: '900',
+                                            color: sector.marketVelocity === 'Explosive' ? '#FF6E14' : sector.marketVelocity === 'High' ? '#10B981' : '#1A1A1A'
+                                        }}>
+                                            {sector.marketVelocity || 'High'}
+                                        </div>
                                     </div>
                                 </div>
 

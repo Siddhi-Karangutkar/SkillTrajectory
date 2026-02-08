@@ -248,7 +248,7 @@ const SkillDemandTrends = () => {
                                     </div>
                                 </div>
 
-                                <button onClick={() => navigate('/learning/courses', { state: { targetSkill: skill.name } })} style={{ width: '100%', padding: '10px', background: '#F8F9FB', border: '1px solid #E5E7EB', borderRadius: '10px', fontWeight: '700', color: '#1A1A1A', cursor: 'pointer', fontSize: '0.85rem' }}>
+                                <button onClick={() => navigate('/learning/courses', { state: { targetSkill: skill.name } })} style={{ width: '100%', padding: '10px', background: 'rgba(255, 110, 20, 0.08)', border: '1px solid rgba(255, 110, 20, 0.2)', borderRadius: '10px', fontWeight: '700', color: '#FF6E14', cursor: 'pointer', fontSize: '0.85rem' }}>
                                     View Insights →
                                 </button>
                             </motion.div>

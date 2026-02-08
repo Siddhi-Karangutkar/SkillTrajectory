@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema({
         phone: { type: String, default: '' },
         bio: { type: String, default: '' },
         currentRole: { type: String, default: '' },
+        targetRole: { type: String, default: '' },
         linkedIn: { type: String, default: '' },
         location: { type: String, default: '' },
         yearsOfExperience: { type: Number, default: 0 },

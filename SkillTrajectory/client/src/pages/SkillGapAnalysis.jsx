@@ -190,19 +190,22 @@ const SkillGapAnalysis = () => {
                                 </div>
                             </div>
 
-                            <button style={{
-                                width: '100%',
-                                padding: '16px',
-                                background: '#FF6E14',
-                                color: '#FFF',
-                                border: 'none',
-                                borderRadius: '14px',
-                                fontSize: '1rem',
-                                fontWeight: '800',
-                                cursor: 'pointer',
-                                transition: '0.2s',
-                                boxShadow: '0 4px 12px rgba(255, 110, 20, 0.2)'
-                            }}>
+                            <button
+                                onClick={() => navigate('/learning/courses', { state: { targetSkill: skill.name } })}
+                                style={{
+                                    width: '100%',
+                                    padding: '16px',
+                                    background: '#FF6E14',
+                                    color: '#FFF',
+                                    border: 'none',
+                                    borderRadius: '14px',
+                                    fontSize: '1rem',
+                                    fontWeight: '800',
+                                    cursor: 'pointer',
+                                    transition: '0.2s',
+                                    boxShadow: '0 4px 12px rgba(255, 110, 20, 0.2)'
+                                }}
+                            >
                                 Bridge This Gap →
                             </button>
                         </motion.div>

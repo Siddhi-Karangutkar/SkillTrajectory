@@ -8,6 +8,7 @@ const CreateProfile = () => {
     const [skills, setSkills] = useState('');
     const [location, setLocation] = useState('');
     const [currentRole, setCurrentRole] = useState('');
+    const [targetRole, setTargetRole] = useState('');
     const [yearsOfExperience, setYearsOfExperience] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -24,6 +25,7 @@ const CreateProfile = () => {
                 skills: skills.split(',').map(s => s.trim()).filter(s => s !== ''),
                 location,
                 currentRole,
+                targetRole,
                 yearsOfExperience: Number(yearsOfExperience)
             };
             await updateProfile(profileData);
@@ -70,14 +72,23 @@ const CreateProfile = () => {
                             />
                         </div>
                         <div className="form-group">
-                            <label>Years of Exp</label>
+                            <label>Target Role</label>
                             <input
-                                type="number"
-                                value={yearsOfExperience}
-                                onChange={(e) => setYearsOfExperience(e.target.value)}
-                                placeholder="2"
+                                type="text"
+                                value={targetRole}
+                                onChange={(e) => setTargetRole(e.target.value)}
+                                placeholder="AI Engineer"
                             />
                         </div>
+                    </div>
+                    <div className="form-group">
+                        <label>Years of Exp</label>
+                        <input
+                            type="number"
+                            value={yearsOfExperience}
+                            onChange={(e) => setYearsOfExperience(e.target.value)}
+                            placeholder="2"
+                        />
                     </div>
                     <div className="form-group">
                         <label>Skills (comma separated)</label>
