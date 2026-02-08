@@ -70,22 +70,22 @@ const UserDashboard = () => {
                                 <span className="number">{data?.streak}</span>
                                 <span className="unit">day{data?.streak !== 1 ? 's' : ''}</span>
                             </div>
-                            <span className="stat-subtext">a new record!</span>
+                            <span className="stat-subtext">current streak 🔥</span>
                         </div>
 
                         <div className="stat-item">
-                            <span className="stat-label">TOTAL TRAJECTORY XP</span>
+                            <span className="stat-label">TRAJECTORY XP</span>
                             <div className="stat-value">
                                 <span className="number" style={{ color: '#FF6E14' }}>{data?.points}</span>
                                 <span className="unit">pts</span>
                             </div>
-                            <span className="stat-subtext">growing daily</span>
+                            <span className="stat-subtext">total earned</span>
                         </div>
 
                         <div className="stat-item progress-circle">
                             <span className="stat-label">TIER PROGRESS</span>
                             <div className="circular-progress">
-                                <svg width="100" height="100" viewBox="0 0 100 100">
+                                <svg width="80" height="80" viewBox="0 0 100 100">
                                     <circle className="bg" cx="50" cy="50" r="40" />
                                     <circle
                                         className="fg"
@@ -100,8 +100,9 @@ const UserDashboard = () => {
                             </div>
                         </div>
 
+                        {/* Recent Activity Small Grid */}
                         <div className="stat-item">
-                            <span className="stat-label">PUBLIC ACTIVITY</span>
+                            <span className="stat-label">ACTIVITY</span>
                             <div className="activity-dots">
                                 <div className="dot-labels"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
                                 <div className="dots-grid">
@@ -113,6 +114,46 @@ const UserDashboard = () => {
                         </div>
                     </div>
                 </header>
+
+                {/* Quick Actions Grid */}
+                <section className="quick-actions-grid">
+                    <a href="/career/timeline" className="action-card">
+                        <div className="card-icon-wrapper" style={{ background: 'rgba(255, 110, 20, 0.1)', color: '#FF6E14' }}>
+                            🚀
+                        </div>
+                        <div>
+                            <h3>Career Roadmap</h3>
+                            <p>View your 6-phase strategic timeline.</p>
+                        </div>
+                    </a>
+                    <a href="/career/skill-gap" className="action-card">
+                        <div className="card-icon-wrapper" style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10B981' }}>
+                            📊
+                        </div>
+                        <div>
+                            <h3>Skill Gaps</h3>
+                            <p>Analyze and bridge your missing skills.</p>
+                        </div>
+                    </a>
+                    <a href="/interview/practice" className="action-card">
+                        <div className="card-icon-wrapper" style={{ background: 'rgba(59, 130, 246, 0.1)', color: '#3B82F6' }}>
+                            🎤
+                        </div>
+                        <div>
+                            <h3>AI Interview</h3>
+                            <p>Practice with Aria, your AI Coach.</p>
+                        </div>
+                    </a>
+                    <a href="/market-trends" className="action-card">
+                        <div className="card-icon-wrapper" style={{ background: 'rgba(139, 92, 246, 0.1)', color: '#8B5CF6' }}>
+                            📈
+                        </div>
+                        <div>
+                            <h3>Market Trends</h3>
+                            <p>Real-time demand and salary data.</p>
+                        </div>
+                    </a>
+                </section>
 
                 {/* Heatmap Section */}
                 <section className="heatmap-section">
@@ -172,7 +213,7 @@ const UserDashboard = () => {
                                 </div>
                             ))
                         ) : (
-                            <p className="no-activity" style={{ color: '#8B949E', fontSize: '0.9rem' }}>No recent activity. Start your first journey today!</p>
+                            <p className="no-activity" style={{ color: '#6B7280', fontSize: '0.9rem' }}>No recent activity. Start your first journey today!</p>
                         )}
                     </div>
                 </section>

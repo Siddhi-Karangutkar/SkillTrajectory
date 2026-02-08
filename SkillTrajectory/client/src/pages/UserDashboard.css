@@ -1,9 +1,9 @@
 .user-dashboard-container {
     min-height: 100vh;
-    background: #0D1117;
-    color: #E6EDF3;
+    background: #FFFFFF;
+    color: #1A1A1A;
     padding: 100px 20px 60px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
 }
 
 .dashboard-content {
@@ -16,24 +16,29 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
+    background: #FFFFFF;
+    padding: 2rem 0;
+    border-bottom: 1px solid #FFE5D0;
 }
 
 .welcome-text {
-    font-size: 2.5rem;
-    font-weight: 600;
+    font-size: 2.2rem;
+    font-weight: 700;
     margin-bottom: 8px;
-    color: #FFFFFF;
+    color: #FF6E14;
+    /* Orange as requested */
 }
 
 .subtitle {
-    color: #8B949E;
-    font-size: 1.1rem;
+    color: #6B7280;
+    font-size: 1rem;
+    font-weight: 500;
 }
 
 .header-stats {
     display: flex;
-    gap: 3rem;
+    gap: 2.5rem;
     align-items: center;
 }
 
@@ -45,41 +50,45 @@
 }
 
 .stat-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #8B949E;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #9CA3AF;
     letter-spacing: 0.1em;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
 }
 
 .stat-value {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    align-items: baseline;
+    gap: 4px;
 }
 
 .stat-value .number {
     font-size: 2rem;
-    font-weight: 400;
-    color: #FFFFFF;
+    font-weight: 700;
+    color: #FF6E14;
+    /* Orange */
 }
 
 .stat-value .unit {
     font-size: 0.9rem;
-    color: #8B949E;
+    color: #6B7280;
+    font-weight: 500;
 }
 
 .stat-subtext {
-    font-size: 0.8rem;
-    color: #8B949E;
+    font-size: 0.75rem;
+    color: #FF6E14;
     margin-top: 4px;
+    font-weight: 600;
 }
 
 /* Circular Progress */
 .circular-progress {
     position: relative;
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
 }
 
 .circular-progress svg {
@@ -88,14 +97,16 @@
 
 .circular-progress .bg {
     fill: none;
-    stroke: #30363D;
-    stroke-width: 4;
+    stroke: #E5E7EB;
+    stroke-width: 6;
 }
 
 .circular-progress .fg {
     fill: none;
-    stroke: #58A6FF;
-    stroke-width: 4;
+    stroke: #3B82F6;
+    /* Blue for contrast or Orange if preferred? Sticking to Blue for progress usually, but let's match theme */
+    stroke: #FF6E14;
+    stroke-width: 6;
     stroke-linecap: round;
     transition: stroke-dashoffset 1s ease-out;
 }
@@ -111,25 +122,84 @@
 }
 
 .progress-value .percent {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #FFFFFF;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1A1A1A;
+    /* Black text */
 }
 
 .progress-value .to-label {
-    font-size: 0.65rem;
-    color: #8B949E;
-    text-decoration: underline;
+    font-size: 0.6rem;
+    color: #6B7280;
+}
+
+/* Quick Actions Grid */
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.action-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 160px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.action-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: #FF6E14;
+}
+
+.card-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.action-card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #FF6E14;
+    /* Orange */
+    margin-bottom: 0.25rem;
+}
+
+.action-card p {
+    font-size: 0.85rem;
+    color: #6B7280;
+    margin: 0;
 }
 
 /* Activity Dots */
+.activity-dots {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
 .dot-labels {
     display: flex;
     justify-content: space-between;
-    width: 80px;
-    font-size: 0.7rem;
-    color: #8B949E;
-    margin-bottom: 8px;
+    width: 100%;
+    font-size: 0.65rem;
+    color: #9CA3AF;
 }
 
 .dots-grid {
@@ -139,41 +209,47 @@
 }
 
 .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #30363D;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: #E5E7EB;
 }
 
 .dot.active {
-    background: #FFFFFF;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-    border: 1px solid #0D1117;
+    background: #1A1A1A;
+    /* Black for active dot to stand out? Or Orange? Let's use Black for contrast against Orange text nearby */
+    background: #FF6E14;
 }
 
 /* Heatmap Section */
 .heatmap-section {
-    background: #0D1117;
-    border: 1px solid #30363D;
-    border-radius: 6px;
+    background: #111111;
+    /* Dark background for the heatmap container specifically to make colors pop? No, user said FULL WHITE */
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .section-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 12px;
+    margin-bottom: 1.5rem;
+    align-items: center;
 }
 
 .section-header h2 {
-    font-size: 1rem;
-    font-weight: 400;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #FF6E14;
+    /* Orange */
 }
 
 .settings-link {
-    font-size: 0.8rem;
-    color: #8B949E;
+    font-size: 0.85rem;
+    color: #6B7280;
     cursor: pointer;
 }
 
@@ -188,35 +264,37 @@
     grid-template-columns: repeat(53, 1fr);
     grid-auto-flow: column;
     grid-template-rows: repeat(7, 1fr);
-    gap: 3px;
-    height: 100px;
+    gap: 4px;
+    height: 120px;
 }
 
+/* Heatmap Cells - Ensuring Light Theme */
 .heatmap-cell {
     width: 100%;
     aspect-ratio: 1;
     border-radius: 2px;
-    background: #161B22;
+    background: #F3F4F6;
+    /* Light Grey for empty */
 }
 
 .heatmap-cell.level-0 {
-    background: #161B22;
+    background: #F3F4F6;
 }
 
 .heatmap-cell.level-1 {
-    background: #0E4429;
+    background: #FFE5D0;
 }
 
 .heatmap-cell.level-2 {
-    background: #006D32;
+    background: #FFB380;
 }
 
 .heatmap-cell.level-3 {
-    background: #26A641;
+    background: #FF8229;
 }
 
 .heatmap-cell.level-4 {
-    background: #39D353;
+    background: #D94E00;
 }
 
 .heatmap-legend {
@@ -225,7 +303,7 @@
     justify-content: flex-end;
     gap: 8px;
     font-size: 0.75rem;
-    color: #8B949E;
+    color: #6B7280;
 }
 
 .legend-cells {
@@ -234,20 +312,22 @@
 }
 
 .legend-cells .heatmap-cell {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
 }
 
 /* Activity Timeline */
 .section-title {
     font-size: 1.25rem;
-    font-weight: 400;
+    font-weight: 700;
+    color: #FF6E14;
+    /* Orange */
     margin-bottom: 1.5rem;
 }
 
 .activity-timeline {
     position: relative;
-    padding-left: 20px;
+    padding-left: 24px;
 }
 
 .activity-timeline::before {
@@ -257,14 +337,16 @@
     left: 2px;
     bottom: 0;
     width: 2px;
-    background: #30363D;
+    background: #E5E7EB;
 }
 
 .month-label {
-    font-size: 0.8rem;
-    color: #8B949E;
-    margin-bottom: 15px;
-    margin-left: -20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #6B7280;
+    margin-bottom: 16px;
+    margin-left: -24px;
+    padding-left: 8px;
 }
 
 .timeline-item {
@@ -274,12 +356,12 @@
 
 .timeline-dot {
     position: absolute;
-    left: -22px;
+    left: -27px;
     top: 4px;
-    width: 10px;
-    height: 10px;
-    background: #0D1117;
-    border: 2px solid #8B949E;
+    width: 12px;
+    height: 12px;
+    background: #FFFFFF;
+    border: 3px solid #FF6E14;
     border-radius: 50%;
     z-index: 1;
 }
@@ -287,18 +369,24 @@
 .timeline-content .action {
     display: block;
     font-size: 1rem;
+    font-weight: 500;
+    color: #1A1A1A;
+    /* Black text */
     margin-bottom: 12px;
 }
 
+/* Repo/Activity List - Fix Dark Background */
 .repo-list {
-    background: #0D1117;
-    border: 1px solid #30363D;
-    border-radius: 6px;
+    background: #FFFFFF;
+    /* Pure White */
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
     padding: 1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .activity-tags {
@@ -309,29 +397,31 @@
 
 .activity-tag {
     font-size: 0.75rem;
-    color: #58A6FF;
-    background: rgba(88, 166, 255, 0.1);
-    padding: 2px 8px;
-    border-radius: 10px;
+    color: #FF6E14;
+    background: rgba(255, 110, 20, 0.1);
+    padding: 4px 10px;
+    border-radius: 12px;
     font-weight: 600;
 }
 
 .commit-counts {
     display: flex;
     align-items: flex-end;
-    gap: 2px;
-    height: 14px;
+    gap: 3px;
+    height: 20px;
 }
 
 .commit-bar {
-    width: 3px;
-    background: #26A641;
-    border-radius: 1px;
+    width: 4px;
+    background: #FF6E14;
+    border-radius: 2px;
+    opacity: 0.8;
 }
 
 .commit-total {
     font-size: 0.8rem;
-    color: #8B949E;
+    color: #6B7280;
+    font-weight: 500;
 }
 
 .dashboard-loading {
@@ -339,8 +429,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #0D1117;
-    color: #58A6FF;
+    background: #FFFFFF;
+    color: #FF6E14;
     font-size: 1.5rem;
     font-weight: 600;
 }
